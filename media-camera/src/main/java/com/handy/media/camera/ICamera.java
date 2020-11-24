@@ -17,7 +17,9 @@ public interface ICamera {
 
     void stopPreview();
 
-    void setOnOpenCameraListener();
+    void enablePreviewFrame(boolean enable);
+
+    void setPreviewFrameCallback(OnPreviewFrameCallback onPreviewFrameCallback);
 
     void release();
 

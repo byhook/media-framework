@@ -33,7 +33,12 @@ public class CameraImpl implements ICamera {
     }
 
     @Override
-    public void setOnOpenCameraListener() {
+    public void enablePreviewFrame(boolean enable) {
+
+    }
+
+    @Override
+    public void setPreviewFrameCallback(OnPreviewFrameCallback onPreviewFrameCallback) {
 
     }
 
