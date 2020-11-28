@@ -6,6 +6,15 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.0"
 
+    signingConfigs {
+        config {
+            storeFile file("$rootDir/debug.jks")
+            keyAlias "debug"
+            keyPassword "debug360"
+            storePassword "debug360"
+        }
+    }
+
     defaultConfig {
         applicationId "com.handy.media.framework"
         minSdkVersion 16
@@ -17,7 +26,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+        }
         release {
+            signingConfig signingConfigs.config
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
