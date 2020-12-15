@@ -14,6 +14,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onOpenCameraClick(View view) {
-        CameraActivity.intentStart(this);
+        CameraSourceActivity.intentStart(this);
     }
 }

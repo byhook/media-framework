@@ -1,5 +1,7 @@
 package com.handy.media.camera;
 
+import android.graphics.SurfaceTexture;
+
 /**
  * @author: handy
  * @date: 2020-11-24
@@ -19,6 +21,11 @@ public class CameraImpl implements ICamera {
 
     @Override
     public void setPreviewSize(int width, int height) {
+
+    }
+
+    @Override
+    public void bindPreviewTexture(SurfaceTexture surfaceTexture) {
 
     }
 

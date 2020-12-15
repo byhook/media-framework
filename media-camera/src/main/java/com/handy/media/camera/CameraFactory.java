@@ -20,7 +20,7 @@ public class CameraFactory {
 
             return new CameraImpl();
         } else {
-            return new Camera2Impl();
+            return new CameraImpl();
         }
     }
 
