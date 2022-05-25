@@ -3,12 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    compileSdkVersion versions.compileSdk
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
         versionCode 1
         versionName "1.0"
 
@@ -30,9 +29,12 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
+    implementation "androidx.appcompat:appcompat:${versions.appcompatVersion}"
+    implementation "com.google.android.material:material:${versions.materialVersion}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayoutVersion}"
+    testImplementation "junit:junit:${versions.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.junitExtVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espressoVersion}"
+
 }
