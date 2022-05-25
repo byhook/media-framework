@@ -1,38 +1,22 @@
 plugins {
-    id "com.android.application"
+    id 'com.android.library'
 }
 
 android {
     compileSdkVersion versions.compileSdk
 
-    signingConfigs {
-        config {
-            storeFile file("$rootDir/debug.jks")
-            keyAlias "debug"
-            keyPassword "debug360"
-            storePassword "debug360"
-        }
-    }
-
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        versionCode 1
-        versionName "1.0"
-        applicationId "${versions.applicationId}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
-        debug {
-            signingConfig signingConfigs.config
-        }
         release {
-            signingConfig signingConfigs.config
-
             minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -42,16 +26,10 @@ android {
 }
 
 dependencies {
-
-    implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "androidx.appcompat:appcompat:${versions.appcompatVersion}"
     implementation "com.google.android.material:material:${versions.materialVersion}"
     implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayoutVersion}"
     testImplementation "junit:junit:${versions.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${versions.junitExtVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espressoVersion}"
-
-    implementation "com.handy.module:utils:1.0.2"
-    implementation project(":media-camera")
-    implementation project(":media-decode")
 }
