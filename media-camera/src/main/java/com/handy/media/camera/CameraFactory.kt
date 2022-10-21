@@ -1,27 +1,30 @@
-package com.handy.media.camera;
+package com.handy.media.camera
 
-import android.os.Build;
+import com.handy.media.camera.CameraSource
+import android.os.Build
+import com.handy.media.camera.CameraV1Impl
+import java.lang.IllegalStateException
 
 /**
  * @author: handy
  * @date: 2020-11-24
  * @description:
  */
-public class CameraFactory {
+class CameraFactory private constructor() {
 
-    private static final String TAG = "CameraFactory";
-
-    private CameraFactory(){
-        throw new IllegalStateException("");
-    }
-
-    public static ICamera makeCamera() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-
-            return new CameraImpl();
-        } else {
-            return new CameraImpl();
+    companion object {
+        private const val TAG = "CameraFactory"
+        fun makeCamera(): CameraSource {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                CameraV1Impl()
+            } else {
+                CameraV1Impl()
+            }
         }
+
     }
 
+    init {
+        throw IllegalStateException("")
+    }
 }

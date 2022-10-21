@@ -9,11 +9,9 @@ import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.view.Surface;
 
-import com.handy.media.camera.ICamera;
-import com.handy.media.camera.R;
+import com.handy.media.camera.CameraSource;
 import com.handy.media.texture.Texture;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -88,7 +86,7 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
     /**
      * 相机实例
      */
-    private ICamera mCamera;
+    private CameraSource mCamera;
 
     /**
      * 纹理

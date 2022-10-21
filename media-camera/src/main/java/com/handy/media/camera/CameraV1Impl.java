@@ -1,13 +1,15 @@
 package com.handy.media.camera;
 
 import android.graphics.SurfaceTexture;
+import com.handy.media.camera.CameraSource;
+import com.handy.media.camera.OnPreviewFrameCallback;
 
 /**
  * @author: handy
  * @date: 2020-11-24
  * @description:
  */
-public class CameraImpl implements ICamera {
+public class CameraV1Impl implements CameraSource {
 
     @Override
     public void bindPreviewView() {

@@ -1,14 +1,14 @@
-package com.handy.media.camera;
+package com.handy.media.camera
 
 /**
  * @author: handy
  * @date: 2020-11-24
  * @description:
  */
-public class CameraSize {
+class CameraSize {
 
-    public int width;
+    var width = 0
 
-    public int height;
+    var height = 0
 
 }

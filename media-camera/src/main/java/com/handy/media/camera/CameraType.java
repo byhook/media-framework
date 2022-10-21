@@ -7,8 +7,14 @@ package com.handy.media.camera;
  */
 public interface CameraType {
 
+    /**
+     * 后置摄像头
+     */
     int TYPE_BACK = 0;
 
+    /**
+     * 前置摄像头
+     */
     int TYPE_FRONT = 1;
 
 }

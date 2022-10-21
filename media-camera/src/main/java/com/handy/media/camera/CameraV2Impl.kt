@@ -1,56 +1,49 @@
-package com.handy.media.camera;
+package com.handy.media.camera
 
-import android.graphics.SurfaceTexture;
+import com.handy.media.camera.CameraSource
+import android.graphics.SurfaceTexture
+import com.handy.media.camera.OnPreviewFrameCallback
 
 /**
  * @author: handy
  * @date: 2020-11-24
  * @description:
  */
-public class Camera2Impl implements ICamera {
+class CameraV2Impl : CameraSource {
 
-    @Override
-    public void bindPreviewView() {
-
-    }
-
-    @Override
-    public void setupCamera() {
+    override fun bindPreviewView() {
 
     }
 
-    @Override
-    public void setPreviewSize(int width, int height) {
+    override fun setupCamera() {
 
     }
 
-    @Override
-    public void bindPreviewTexture(SurfaceTexture surfaceTexture) {
+    override fun setPreviewSize(width: Int, height: Int) {
 
     }
 
-    @Override
-    public void startPreview() {
+    override fun bindPreviewTexture(surfaceTexture: SurfaceTexture) {
 
     }
 
-    @Override
-    public void stopPreview() {
+    override fun startPreview() {
 
     }
 
-    @Override
-    public void enablePreviewFrame(boolean enable) {
+    override fun stopPreview() {
 
     }
 
-    @Override
-    public void setPreviewFrameCallback(OnPreviewFrameCallback onPreviewFrameCallback) {
+    override fun enablePreviewFrame(enable: Boolean) {
 
     }
 
-    @Override
-    public void release() {
+    override fun setPreviewFrameCallback(onPreviewFrameCallback: OnPreviewFrameCallback?) {
+
+    }
+
+    override fun release() {
 
     }
 
