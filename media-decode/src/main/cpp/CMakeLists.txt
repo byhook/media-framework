@@ -5,5 +5,5 @@
 
 cmake_minimum_required(VERSION 3.18.1)
 
-ADD_SUBDIRECTORY(m4adec)
-ADD_SUBDIRECTORY(faad2)
+#ADD_SUBDIRECTORY(m4adec)
+#ADD_SUBDIRECTORY(faad2)

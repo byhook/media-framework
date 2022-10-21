@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -46,7 +47,6 @@ android {
 }
 
 dependencies {
-
     implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "androidx.appcompat:appcompat:${versions.appcompatVersion}"
     implementation "com.google.android.material:material:${versions.materialVersion}"
@@ -55,7 +55,13 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:${versions.junitExtVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espressoVersion}"
 
-    implementation "com.handy.module:utils:1.0.2"
+    implementation 'com.handy.module:utils:1.0.2'
     implementation project(":media-camera")
     implementation project(":media-decode")
+
+    implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

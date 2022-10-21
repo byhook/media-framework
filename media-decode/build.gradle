@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
 }
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -53,4 +54,9 @@ dependencies {
     testImplementation "junit:junit:${versions.junitVersion}"
     androidTestImplementation "androidx.test.ext:junit:${versions.junitExtVersion}"
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espressoVersion}"
+    implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
