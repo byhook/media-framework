@@ -27,7 +27,6 @@ android {
 }
 
 dependencies {
-
     implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "androidx.appcompat:appcompat:${versions.appcompatVersion}"
     implementation "com.google.android.material:material:${versions.materialVersion}"
@@ -39,6 +38,15 @@ dependencies {
     implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation "androidx.camera:camera-core:${versions.camerax_version}"
+    implementation "androidx.camera:camera-camera2:${versions.camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${versions.camerax_version}"
+    implementation "androidx.camera:camera-video:${versions.camerax_version}"
+
+    implementation "androidx.camera:camera-view:${versions.camerax_version}"
+    implementation "androidx.camera:camera-extensions:${versions.camerax_version}"
+
+    implementation 'com.handy.module:utils:1.0.2'
 }
 repositories {
     mavenCentral()

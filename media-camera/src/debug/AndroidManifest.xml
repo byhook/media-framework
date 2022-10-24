@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.handy.media.camera">
+
+    <application>
+        <activity
+                android:name=".CameraV1SourceActivity"
+                android:exported="false"
+                android:label="相机测试" />
+        <activity
+                android:name=".CameraXSourceActivity"
+                android:exported="false"
+                android:label="相机测试" />
+    </application>
+
+</manifest>

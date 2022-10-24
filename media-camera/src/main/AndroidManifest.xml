@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.handy.media.camera">
+        package="com.handy.media.camera">
+
+    <!--    添加 android.hardware.camera.any 可确保设备配有相机。指定 .any
+            表示它可以是前置摄像头，也可以是后置摄像头。-->
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission
+            android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+            android:maxSdkVersion="28" />
 
 </manifest>

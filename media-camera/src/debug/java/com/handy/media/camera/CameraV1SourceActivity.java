@@ -1,33 +1,29 @@
-package com.handy.media.framework;
+package com.handy.media.camera;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.handy.media.renderer.SurfaceRenderer;
 import com.handy.module.permission.OnPermissionCallback;
 import com.handy.module.permission.PermissionUtils;
 import com.handy.module.utils.LogUtils;
-
 import java.util.Arrays;
 
 /**
  * @date: 2020-12-14
  * @description:
  */
-public class CameraSourceActivity extends AppCompatActivity {
+public class CameraV1SourceActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraSourceActivity";
 
     private GLSurfaceView surfaceView;
 
     public static void intentStart(Context context) {
-        Intent intent = new Intent(context, CameraSourceActivity.class);
+        Intent intent = new Intent(context, CameraV1SourceActivity.class);
         context.startActivity(intent);
     }
 
