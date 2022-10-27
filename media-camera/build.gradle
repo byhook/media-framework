@@ -46,7 +46,7 @@ dependencies {
     implementation "androidx.camera:camera-view:${versions.camerax_version}"
     implementation "androidx.camera:camera-extensions:${versions.camerax_version}"
 
-    implementation 'com.handy.module:utils:1.0.2'
+    implementation "io.github.byhook:utils4android:${versions.utils4android_version}"
 }
 repositories {
     mavenCentral()
