@@ -1,7 +1,7 @@
 package com.handy.media.camera
 
 import android.graphics.SurfaceTexture
-import com.handy.media.camera.OnPreviewFrameCallback
+import com.handy.media.constants.CameraType
 
 /**
  * @author: handy
@@ -10,17 +10,15 @@ import com.handy.media.camera.OnPreviewFrameCallback
  */
 interface CameraSource {
 
-    fun bindPreviewView()
+    fun openCamera(@CameraType cameraId: Int)
 
-    fun setupCamera()
+    fun closeCamera()
 
     fun setPreviewSize(width: Int, height: Int)
 
     fun bindPreviewTexture(surfaceTexture: SurfaceTexture)
 
-    fun startPreview()
-
-    fun stopPreview()
+    fun enablePreview(enable: Boolean)
 
     fun enablePreviewFrame(enable: Boolean)
 

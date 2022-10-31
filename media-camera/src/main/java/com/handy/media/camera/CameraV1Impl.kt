@@ -1,59 +1,46 @@
-package com.handy.media.camera;
+package com.handy.media.camera
 
-import android.graphics.SurfaceTexture;
-import com.handy.media.camera.CameraSource;
-import com.handy.media.camera.OnPreviewFrameCallback;
+import com.handy.media.camera.CameraSource
+import android.opengl.GLSurfaceView
+import android.graphics.SurfaceTexture
+import com.handy.media.camera.OnPreviewFrameCallback
 
 /**
  * @author: handy
  * @date: 2020-11-24
  * @description:
  */
-public class CameraV1Impl implements CameraSource {
+class CameraV1Impl : CameraSource {
 
-    @Override
-    public void bindPreviewView() {
-
-    }
-
-    @Override
-    public void setupCamera() {
+    override fun openCamera(cameraId: Int) {
 
     }
 
-    @Override
-    public void setPreviewSize(int width, int height) {
+    override fun closeCamera() {
 
     }
 
-    @Override
-    public void bindPreviewTexture(SurfaceTexture surfaceTexture) {
+    override fun setPreviewSize(width: Int, height: Int) {
 
     }
 
-    @Override
-    public void startPreview() {
+    override fun bindPreviewTexture(surfaceTexture: SurfaceTexture) {
 
     }
 
-    @Override
-    public void stopPreview() {
+    override fun enablePreview(enable: Boolean) {
 
     }
 
-    @Override
-    public void enablePreviewFrame(boolean enable) {
+    override fun enablePreviewFrame(enable: Boolean) {
 
     }
 
-    @Override
-    public void setPreviewFrameCallback(OnPreviewFrameCallback onPreviewFrameCallback) {
+    override fun setPreviewFrameCallback(onPreviewFrameCallback: OnPreviewFrameCallback?) {
 
     }
 
-    @Override
-    public void release() {
+    override fun release() {
 
     }
-
 }

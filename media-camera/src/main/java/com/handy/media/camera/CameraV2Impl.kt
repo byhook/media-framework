@@ -2,6 +2,7 @@ package com.handy.media.camera
 
 import com.handy.media.camera.CameraSource
 import android.graphics.SurfaceTexture
+import android.opengl.GLSurfaceView
 import com.handy.media.camera.OnPreviewFrameCallback
 
 /**
@@ -11,11 +12,11 @@ import com.handy.media.camera.OnPreviewFrameCallback
  */
 class CameraV2Impl : CameraSource {
 
-    override fun bindPreviewView() {
+    override fun openCamera(cameraId: Int) {
 
     }
 
-    override fun setupCamera() {
+    override fun closeCamera() {
 
     }
 
@@ -27,11 +28,7 @@ class CameraV2Impl : CameraSource {
 
     }
 
-    override fun startPreview() {
-
-    }
-
-    override fun stopPreview() {
+    override fun enablePreview(enable: Boolean) {
 
     }
 

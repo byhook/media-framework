@@ -3,10 +3,10 @@ package com.handy.media.camera;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.view.PreviewView;
 import com.handy.module.permission.OnPermissionCallback;
 import com.handy.module.permission.PermissionUtils;
 import com.handy.module.utils.LogUtils;
@@ -20,7 +20,7 @@ public class CameraXSourceActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraSourceActivity";
 
-    private GLSurfaceView surfaceView;
+    private PreviewView cameraPreviewView;
 
     public static void intentStart(Context context) {
         Intent intent = new Intent(context, CameraXSourceActivity.class);
@@ -50,9 +50,10 @@ public class CameraXSourceActivity extends AppCompatActivity {
     }
 
     private void setupCamera() {
-        surfaceView = new GLSurfaceView(this);
-        surfaceView.setEGLContextClientVersion(3);
-        setContentView(surfaceView);
+        cameraPreviewView = new PreviewView(this);
+        setContentView(cameraPreviewView);
+        CameraSource cameraSource = new CameraXImpl(cameraPreviewView);
+        cameraSource.openCamera(0);
     }
 
 }

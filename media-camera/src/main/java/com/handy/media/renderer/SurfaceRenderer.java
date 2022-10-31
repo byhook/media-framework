@@ -268,7 +268,7 @@ public class SurfaceRenderer implements GLSurfaceView.Renderer {
             return false;
         }*/
         //开启相机预览
-        mCamera.startPreview();
+        mCamera.enablePreview(true);
         return true;
     }
 }
