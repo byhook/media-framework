@@ -2,3 +2,4 @@ include ':media-camera'
 include ':app'
 rootProject.name = "media-framework"
 include ':media-decode'
+include ':media-record'
