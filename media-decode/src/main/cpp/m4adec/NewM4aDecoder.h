@@ -1,0 +1,13 @@
+//
+//
+
+#ifndef MEDIA_FRAMEWORK_NEW_M4A_DECODER_H
+#define MEDIA_FRAMEWORK_NEW_M4A_DECODER_H
+
+
+class NewM4aDecoder{
+
+};
+
+
+#endif //MEDIA_FRAMEWORK_NEWM4ADECODER_H
