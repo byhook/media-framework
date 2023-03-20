@@ -1,7 +1,9 @@
 plugins {
     id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-android-extensions'
 }
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -47,7 +49,4 @@ dependencies {
     implementation "androidx.camera:camera-extensions:${versions.camerax_version}"
 
     implementation "io.github.byhook:utils4android:${versions.utils4android_version}"
-}
-repositories {
-    mavenCentral()
 }

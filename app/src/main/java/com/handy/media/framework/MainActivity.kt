@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.handy.media.camera.CameraV1SourceActivity
 import com.handy.media.camera.CameraXSourceActivity
+import com.handy.media.debug.DebugMediaRecordActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,6 +20,10 @@ class MainActivity : AppCompatActivity() {
 
     fun onOpenCameraXClick(view: View?) {
         CameraXSourceActivity.intentStart(this)
+    }
+
+    fun onDebugMediaRecordClick(view: View?) {
+        DebugMediaRecordActivity.intentStart(this)
     }
 
 }
