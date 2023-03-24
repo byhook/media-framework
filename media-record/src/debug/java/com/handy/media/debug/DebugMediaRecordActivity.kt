@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.handy.media.debug.DebugMediaRecordActivity
+import com.handy.media.record.NativeMediaRecorder
 
 /**
  * @author: handy
@@ -15,6 +15,8 @@ class DebugMediaRecordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val mediaRecorder = NativeMediaRecorder()
+        mediaRecorder.nativeInit()
     }
 
     companion object {

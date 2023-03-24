@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18.1)
 
 include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/oboe
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 file(GLOB_RECURSE SRC_LIST
