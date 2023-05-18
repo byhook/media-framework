@@ -2,9 +2,9 @@
 //
 #include <jni.h>
 #include <android/log.h>
-#include "media_record.h"
+#include "media_audio_recorder.h"
 
-#define LOG_TAG "NativeKaraRecorder"
+#define LOG_TAG "NativeAudioRecorder"
 
 #define LOGV(format, args...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, format, ##args);
 #define LOGD(format, args...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, format, ##args);
@@ -16,7 +16,7 @@
  * 动态注册
  */
 JNINativeMethod methods[] = {
-    {"nativeInit", "()V", (void *) nativeInit},
+    {"init", "()V", (void *) nativeInit},
 };
 
 /**
@@ -26,7 +26,7 @@ JNINativeMethod methods[] = {
  */
 jint registerNativeMethod(JNIEnv *env) {
   jclass cl =
-      env->FindClass("com/handy/media/record/NativeMediaRecorder");
+      env->FindClass("com/handy/media/record/NativeAudioRecorder");
   if ((env->RegisterNatives(cl, methods, sizeof(methods) / sizeof(methods[0])))
       < 0) {
     return -1;

@@ -5,10 +5,10 @@ include_directories(
 )
 
 file(GLOB_RECURSE SRC_LIST
-        ${CMAKE_CURRENT_SOURCE_DIR}/record/*.cc)
+        ${CMAKE_CURRENT_SOURCE_DIR}/recorder/*.cc)
 
 add_library(
-        media-record
+        media-audio
         SHARED
         ${SRC_LIST}
 )
@@ -19,6 +19,6 @@ find_library(
 )
 
 target_link_libraries(
-        media-record
+        media-audio
         ${log-lib}
 )

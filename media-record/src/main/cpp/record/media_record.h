@@ -1,9 +1,0 @@
-//
-//
-
-#ifndef MEDIA_FRAMEWORK_MEDIA_RECORD_H
-#define MEDIA_FRAMEWORK_MEDIA_RECORD_H
-
-void nativeInit(JNIEnv *, jobject);
-
-#endif //MEDIA_FRAMEWORK_MEDIA_RECORD_H

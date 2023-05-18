@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.handy.media.record.NativeMediaRecorder
+import com.handy.media.record.NativeAudioRecorder
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
 import com.handy.module.utils.LogUtils
@@ -29,7 +29,7 @@ class DebugMediaRecordActivity : AppCompatActivity() {
     }
 
     private val mediaRecorder by lazy {
-        NativeMediaRecorder()
+        NativeAudioRecorder()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class DebugMediaRecordActivity : AppCompatActivity() {
             object : OnPermissionCallback {
                 override fun onRequestPermissionSuccess(permissions: Array<out String>?, requestCode: Int) {
                     LogUtils.d(TAG, "onRequestPermissionSuccess " + Arrays.toString(permissions))
-                    mediaRecorder.nativeInit()
+                    mediaRecorder.init()
                 }
 
                 override fun onRequestPermissionFailed(permissions: Array<out String>?, requestCode: Int) {
