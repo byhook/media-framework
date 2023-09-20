@@ -26,7 +26,7 @@ JNINativeMethod methods[] = {
  */
 jint registerNativeMethod(JNIEnv *env) {
   jclass cl =
-      env->FindClass("com/handy/media/record/NativeAudioRecorder");
+      env->FindClass("com/handy/media/record/NativeOpenAudioRecorder");
   if ((env->RegisterNatives(cl, methods, sizeof(methods) / sizeof(methods[0])))
       < 0) {
     return -1;
