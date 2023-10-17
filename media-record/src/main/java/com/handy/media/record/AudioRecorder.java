@@ -1,5 +1,8 @@
 package com.handy.media.record;
 
+import com.handy.media.AudioChannels;
+import com.handy.media.AudioSampleRate;
+
 /**
  * @author: handy
  * @date: 2023-05-18

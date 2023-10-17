@@ -6,6 +6,8 @@ import android.media.MediaRecorder
 import androidx.annotation.RequiresPermission
 import com.handy.logger.LimitLogger
 import com.handy.logger.Logger
+import com.handy.media.AudioChannels
+import com.handy.media.AudioSampleRate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,7 +54,7 @@ class SimpleAudioRecorder : AudioRecorder {
      * 每次读取的数据大小
      */
     @Volatile
-    private var bufferSize: Int = -1
+    private var minBufferSize: Int = -1
 
     /**
      * 录制状态
@@ -78,7 +80,7 @@ class SimpleAudioRecorder : AudioRecorder {
             AudioFormat.CHANNEL_IN_STEREO
         }
         val bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate, targetAudioChannel, defaultAudioFormat)
-        bufferSize = bufferSizeInBytes
+        minBufferSize = bufferSizeInBytes
         audioRecorder = AudioRecord(
             MediaRecorder.getAudioSourceMax(), sampleRate, targetAudioChannel, defaultAudioFormat, bufferSizeInBytes
         )
@@ -110,7 +112,7 @@ class SimpleAudioRecorder : AudioRecorder {
                 Logger.e(TAG, "start ignore because state is uninitialized")
                 return@launch
             }
-            if (bufferSize <= 0) {
+            if (minBufferSize <= 0) {
                 Logger.e(TAG, "start ignore because bufferSize is error")
                 return@launch
             }
@@ -118,7 +120,7 @@ class SimpleAudioRecorder : AudioRecorder {
             withContext(Dispatchers.Main) {
                 audioRecordListener?.onRecordStart()
             }
-            var buffer = ByteArray(bufferSize)
+            var buffer = ByteArray(minBufferSize)
             while (isActive) {
                 var length = audioRecorder?.read(buffer, 0, buffer.size) ?: 0
                 if (length > 0) {

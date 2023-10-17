@@ -1,4 +1,4 @@
-package com.handy.media.record;
+package com.handy.media;
 
 /**
  * @author: handy

@@ -7,9 +7,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.handy.logger.Logger
-import com.handy.media.record.AudioChannels
+import com.handy.media.AudioChannels
 import com.handy.media.record.AudioRecordListener
-import com.handy.media.record.AudioSampleRate
+import com.handy.media.AudioSampleRate
 import com.handy.media.record.SimpleAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
 import com.handy.module.permission.OnPermissionCallback
