@@ -5,16 +5,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.handy.logger.Logger
 import com.handy.media.AudioChannels
-import com.handy.media.record.AudioRecordListener
 import com.handy.media.AudioSampleRate
+import com.handy.media.player.SimpleAudioPlayer
+import com.handy.media.record.AudioRecordListener
 import com.handy.media.record.SimpleAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
 import java.util.Arrays
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author: handy
@@ -35,11 +38,29 @@ class DebugMediaRecordActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 录制状态
+     */
+    private var recordState: AtomicBoolean = AtomicBoolean(false)
+
+    /**
+     * 播放状态
+     */
+    private var playState: AtomicBoolean = AtomicBoolean(false)
+
     private var debugRecordBinding: DebugActivityMediaRecordBinding? = null
 
-    private val mediaRecorder by lazy {
+    /**
+     * 录制器
+     */
+    private val audioRecorder by lazy {
         SimpleAudioRecorder()
     }
+
+    /**
+     * 播放器
+     */
+    private val audioPlayer: SimpleAudioPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,13 +87,38 @@ class DebugMediaRecordActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun setupViews() {
-        debugRecordBinding?.btnRecordStart?.setOnClickListener {
-            mediaRecorder.init(AudioSampleRate.AUDIO_SAMPLE_RATE_48000, AudioChannels.AUDIO_CHANNEL_STEREO)
-            mediaRecorder.setAudioRecordListener(onAudioRecordListener)
-            mediaRecorder.start()
+        debugRecordBinding?.btnRecordOperate?.setOnClickListener {
+            it as TextView
+            if (recordState.compareAndSet(recordState.get(), !recordState.get())) {
+                if (recordState.get()) {
+                    audioRecorder.init(AudioSampleRate.AUDIO_SAMPLE_RATE_48000, AudioChannels.AUDIO_CHANNEL_STEREO)
+                    audioRecorder.setAudioRecordListener(onAudioRecordListener)
+                    audioRecorder.start()
+                    //刷新UI
+                    it.text = "停止录制"
+                    debugRecordBinding?.btnPlayOperate?.isEnabled = false
+                } else {
+                    //停止录制
+                    audioRecorder.stop()
+                    //刷新UI
+                    it.text = "开始录制"
+                    debugRecordBinding?.btnPlayOperate?.isEnabled = true
+                }
+            }
         }
-        debugRecordBinding?.btnRecordStop?.setOnClickListener {
-            mediaRecorder.stop()
+        debugRecordBinding?.btnPlayOperate?.setOnClickListener {
+            it as TextView
+            if (playState.compareAndSet(playState.get(), !playState.get())) {
+                if (playState.get()) {
+                    //刷新UI
+                    it.text = "停止播放"
+                    debugRecordBinding?.btnRecordOperate?.isEnabled = false
+                } else {
+                    //刷新UI
+                    it.text = "开始播放"
+                    debugRecordBinding?.btnRecordOperate?.isEnabled = true
+                }
+            }
         }
     }
 
