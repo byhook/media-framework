@@ -4,9 +4,12 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.handy.media.record.NativeOpenAudioRecorder
 import com.handy.media.record.R
+import com.handy.media.record.SimpleAudioRecorder
+import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
 import com.handy.module.utils.LogUtils
@@ -29,13 +32,17 @@ class DebugMediaRecordActivity : AppCompatActivity() {
         }
     }
 
+    private var debugRecordBinding: DebugActivityMediaRecordBinding? = null
+
     private val mediaRecorder by lazy {
-        NativeOpenAudioRecorder()
+        SimpleAudioRecorder()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.debug_activity_media_record)
+        debugRecordBinding = DebugActivityMediaRecordBinding.inflate(layoutInflater).apply {
+            setContentView(this.root)
+        }
         setupPermission()
     }
 
@@ -44,7 +51,7 @@ class DebugMediaRecordActivity : AppCompatActivity() {
             object : OnPermissionCallback {
                 override fun onRequestPermissionSuccess(permissions: Array<out String>?, requestCode: Int) {
                     LogUtils.d(TAG, "onRequestPermissionSuccess " + Arrays.toString(permissions))
-                    mediaRecorder.init()
+                    setupViews()
                 }
 
                 override fun onRequestPermissionFailed(permissions: Array<out String>?, requestCode: Int) {
@@ -52,6 +59,15 @@ class DebugMediaRecordActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    private fun setupViews() {
+        debugRecordBinding?.btnRecordStart?.setOnClickListener {
+            mediaRecorder.start()
+        }
+        debugRecordBinding?.btnRecordStop?.setOnClickListener {
+            mediaRecorder.stop()
+        }
     }
 
 }

@@ -12,7 +12,14 @@ public class NativeOpenAudioRecorder implements AudioRecorder {
     }
 
     @Override
-    public native void init();
+    public void init(int sampleRate, int channels) {
+
+    }
+
+    @Override
+    public void setAudioRecordListener(AudioRecordListener audioRecordListener) {
+
+    }
 
     @Override
     public void start() {

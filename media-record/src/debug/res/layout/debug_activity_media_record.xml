@@ -20,4 +20,78 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_record_start"
             app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+            android:id="@+id/tv_record_sample_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="录制频率"
+            app:layout_constraintTop_toBottomOf="@+id/btn_record_stop"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <RadioGroup
+            android:id="@+id/rg_record_sample_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_record_sample_rate"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16000"
+                android:layout_weight="1" />
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="32000"
+                android:layout_weight="1" />
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="44100"
+                android:layout_weight="1" />
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="48000"
+                android:checked="true"
+                android:layout_weight="1" />
+    </RadioGroup>
+
+
+    <TextView
+            android:id="@+id/tv_record_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="录制声道"
+            app:layout_constraintTop_toBottomOf="@+id/rg_record_sample_rate"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    <RadioGroup
+            android:id="@+id/rg_record_channel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_record_channel"
+            app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="单声道"
+                android:layout_weight="1" />
+
+        <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="双声道"
+                android:checked="true"
+                android:layout_weight="1" />
+
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

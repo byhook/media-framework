@@ -10,7 +10,7 @@ public interface AudioRecorder {
     /**
      * 初始化
      */
-    void init();
+    void init(@AudioSampleRate int sampleRate, @AudioChannels int channels);
 
     /**
      * 开始录制
@@ -21,6 +21,8 @@ public interface AudioRecorder {
      * 停止录制
      */
     void stop();
+
+    void setAudioRecordListener(AudioRecordListener audioRecordListener);
 
     /**
      * 释放
