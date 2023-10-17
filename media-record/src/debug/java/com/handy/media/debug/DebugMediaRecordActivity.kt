@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.handy.media.record.NativeOpenAudioRecorder
+import com.handy.media.record.R
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
 import com.handy.module.utils.LogUtils
@@ -34,6 +35,7 @@ class DebugMediaRecordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.debug_activity_media_record)
         setupPermission()
     }
 

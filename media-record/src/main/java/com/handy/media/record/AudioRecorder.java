@@ -7,6 +7,24 @@ package com.handy.media.record;
  */
 public interface AudioRecorder {
 
+    /**
+     * 初始化
+     */
     void init();
+
+    /**
+     * 开始录制
+     */
+    void start();
+
+    /**
+     * 停止录制
+     */
+    void stop();
+
+    /**
+     * 释放
+     */
+    void release();
 
 }

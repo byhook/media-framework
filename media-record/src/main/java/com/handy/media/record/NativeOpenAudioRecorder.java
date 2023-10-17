@@ -14,4 +14,19 @@ public class NativeOpenAudioRecorder implements AudioRecorder {
     @Override
     public native void init();
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void release() {
+
+    }
+
 }

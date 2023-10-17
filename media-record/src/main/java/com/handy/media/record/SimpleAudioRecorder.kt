@@ -1,14 +1,25 @@
-package com.handy.media.record;
+package com.handy.media.record
 
 /**
  * @author: handy
  * @date: 2023-03-22
  * @description:
  */
-public class SimpleAudioRecorder implements AudioRecorder {
+class SimpleAudioRecorder : AudioRecorder {
 
-    @Override
-    public void init() {
+    override fun init() {
+
+    }
+
+    override fun start() {
+
+    }
+
+    override fun stop() {
+
+    }
+
+    override fun release() {
 
     }
 
