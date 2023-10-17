@@ -58,5 +58,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutinesCoreVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroidVersion}"
 
+    implementation project(":logger")
     implementation "io.github.byhook:utils4android:${versions.utils4android_version}"
 }

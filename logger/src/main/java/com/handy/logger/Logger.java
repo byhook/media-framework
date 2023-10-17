@@ -1,5 +1,7 @@
 package com.handy.logger;
 
+import android.util.Log;
+
 /**
  * @author: handy
  * @date: 2023-04-04
@@ -21,5 +23,30 @@ public class Logger {
     public static final int LEVEL_FATAL = 5;
 
     public static native void nativeInit(int logLevel);
+
+    /**
+     * 先简单实现
+     * @param tag
+     * @param message
+     */
+    public static void v(String tag, String message) {
+        Log.v(tag, message);
+    }
+
+    public static void d(String tag, String message) {
+        Log.d(tag, message);
+    }
+
+    public static void i(String tag, String message) {
+        Log.i(tag, message);
+    }
+
+    public static void w(String tag, String message) {
+        Log.w(tag, message);
+    }
+
+    public static void e(String tag, String message) {
+        Log.e(tag, message);
+    }
 
 }

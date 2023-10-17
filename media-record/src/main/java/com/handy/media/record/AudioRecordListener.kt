@@ -10,6 +10,6 @@ interface AudioRecordListener {
 
     fun onRecordBuffer(buffer: ByteArray)
 
-    fun onRecordStop()
+    fun onRecordStop(errCode: Int)
 
 }
