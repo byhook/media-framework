@@ -12,7 +12,8 @@ import com.handy.media.AudioChannels
 import com.handy.media.AudioSampleRate
 import com.handy.media.common.FileUtils
 import com.handy.media.common.IOUtils
-import com.handy.media.player.SimpleAudioPlayer
+import com.handy.media.player.AudioPlayer
+import com.handy.media.player.SimpleFileAudioPlayer
 import com.handy.media.record.AudioRecordListener
 import com.handy.media.record.SimpleAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
@@ -20,7 +21,7 @@ import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
+import java.io.IOException
 import java.util.Arrays
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -66,7 +67,12 @@ class DebugMediaRecordActivity : AppCompatActivity() {
     /**
      * 播放器
      */
-    private val audioPlayer: SimpleAudioPlayer? = null
+    private var audioPlayer: AudioPlayer? = null
+
+    private val targetAudioPcmFile by lazy {
+        val audioDir = FileUtils.getExternalFileDir("localAudio")
+        File(audioDir, "target.pcm")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +99,10 @@ class DebugMediaRecordActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun setupViews() {
+        if (targetAudioPcmFile.exists()) {
+            debugRecordBinding?.tvRecordLocationContent?.text = targetAudioPcmFile.absolutePath
+            debugRecordBinding?.btnPlayOperate?.isEnabled = true
+        }
         debugRecordBinding?.btnRecordOperate?.setOnClickListener {
             it as TextView
             if (recordState.compareAndSet(recordState.get(), !recordState.get())) {
@@ -119,7 +129,19 @@ class DebugMediaRecordActivity : AppCompatActivity() {
                     //刷新UI
                     it.text = "停止播放"
                     debugRecordBinding?.btnRecordOperate?.isEnabled = false
+                    //启动播放
+                    if (audioPlayer == null) {
+                        audioPlayer = SimpleFileAudioPlayer(
+                            targetAudioPcmFile,
+                            AudioSampleRate.AUDIO_SAMPLE_RATE_48000,
+                            AudioChannels.AUDIO_CHANNEL_STEREO
+                        )
+                    }
+                    audioPlayer?.start()
                 } else {
+                    //停止播放
+                    audioPlayer?.stop()
+                    audioPlayer = null
                     //刷新UI
                     it.text = "开始播放"
                     debugRecordBinding?.btnRecordOperate?.isEnabled = true
@@ -133,18 +155,19 @@ class DebugMediaRecordActivity : AppCompatActivity() {
         @Volatile
         private var audioPcmFileStream: FileOutputStream? = null
 
-        private val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
-
+        @SuppressLint("SuspiciousIndentation")
         override fun onRecordStart() {
-            val audioDir = FileUtils.getExternalFileDir("localAudio")
-            val targetAudioFile = File(audioDir, "${dateFormat.format(System.currentTimeMillis())}.pcm")
-                Logger.i(TAG, "onRecordStart ${targetAudioFile.absolutePath}")
-            audioPcmFileStream = FileOutputStream(targetAudioFile)
+            Logger.i(TAG, "onRecordStart ${targetAudioPcmFile.absolutePath}")
+            audioPcmFileStream = FileOutputStream(targetAudioPcmFile)
         }
 
         override fun onRecordBuffer(buffer: ByteArray) {
-            audioPcmFileStream?.write(buffer)
-            audioPcmFileStream?.flush()
+            try {
+                audioPcmFileStream?.write(buffer)
+                audioPcmFileStream?.flush()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
 
         override fun onRecordStop(errCode: Int) {

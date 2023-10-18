@@ -2,6 +2,7 @@ package com.handy.media.player
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioTrack
 import com.handy.logger.LimitLogger
 import com.handy.logger.Logger
@@ -55,7 +56,7 @@ class SimpleAudioPlayer(
         val audioFormat = AudioFormat.Builder().setEncoding(defaultAudioFormat).setSampleRate(sampleRate)
             .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).build()
         audioTrack = AudioTrack(
-            targetAttrs, audioFormat, sampleRate, targetAudioChannel, minBufferSize
+            targetAttrs, audioFormat, minBufferSize, AudioTrack.MODE_STATIC, AudioManager.AUDIO_SESSION_ID_GENERATE
         )
     }
 
