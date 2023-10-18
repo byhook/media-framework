@@ -1,10 +1,9 @@
 package com.handy.media.player
 
-import android.media.AudioFormat
-import android.media.AudioTrack
 import com.handy.logger.Logger
 import com.handy.media.AudioChannels
 import com.handy.media.AudioSampleRate
+import com.handy.media.common.IOUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -46,22 +45,22 @@ class SimpleFileAudioPlayer(
         CoroutineScope(Job() + Dispatchers.Default)
     }
 
+    private var audioPcmFileStream: FileInputStream? = null
+
     init {
-        val targetAudioChannel = if (audioChannels == AudioChannels.AUDIO_CHANNEL_MONO) {
-            AudioFormat.CHANNEL_IN_MONO
-        } else {
-            AudioFormat.CHANNEL_IN_STEREO
-        }
         // 获得构建对象的最小缓冲区大小
-        minBufferSize = AudioTrack.getMinBufferSize(sampleRate, targetAudioChannel, AudioFormat.ENCODING_PCM_16BIT)
+        minBufferSize = audioPlayer.getMinBufferSize()
+        Logger.i(TAG,"init minBufferSize:$minBufferSize " +
+                "sampleRate:$sampleRate channels:$audioChannels")
     }
 
     override fun start() {
         audioPlayJob = workScope.launch {
+            audioPcmFileStream = FileInputStream(pcmFile)
+            audioPlayer.start()
             while (isActive && minBufferSize > 0) {
-                val inputStream = FileInputStream(pcmFile)
                 val readBuffer = ByteArray(minBufferSize)
-                var readLength: Int = inputStream.read(readBuffer, 0, minBufferSize)
+                var readLength = audioPcmFileStream?.read(readBuffer, 0, minBufferSize) ?: -1
                 if (readLength == -1) {
                     Logger.e(TAG, "start break")
                     break
@@ -69,6 +68,9 @@ class SimpleFileAudioPlayer(
                     audioPlayer.playAudioBuffer(readBuffer, 0, readLength)
                 }
             }
+            Logger.e(TAG, "start play complete")
+            //停止播放
+            stop()
         }
     }
 
@@ -78,8 +80,15 @@ class SimpleFileAudioPlayer(
 
     override fun stop() {
         workScope.launch {
+            //等待停止播放
             audioPlayJob?.cancelAndJoin()
             audioPlayJob = null
+            //停止播放
+            audioPlayer.stop()
+            //关闭流操作
+            IOUtils.closeQuietly(audioPcmFileStream)
+            audioPcmFileStream = null
+            Logger.i(TAG, "stop play complete")
         }
     }
 

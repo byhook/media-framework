@@ -31,6 +31,12 @@ class SimpleAudioPlayer(
     private var audioTrack: AudioTrack? = null
 
     /**
+     * 每次读取的数据大小
+     */
+    @Volatile
+    private var minBufferSize: Int = -1
+
+    /**
      * 播放状态
      */
     private var playState: AtomicBoolean = AtomicBoolean(false)
@@ -44,20 +50,24 @@ class SimpleAudioPlayer(
 
     init {
         val targetAudioChannel = if (audioChannels == AudioChannels.AUDIO_CHANNEL_MONO) {
-            AudioFormat.CHANNEL_IN_MONO
+            AudioFormat.CHANNEL_OUT_MONO
         } else {
-            AudioFormat.CHANNEL_IN_STEREO
+            AudioFormat.CHANNEL_OUT_STEREO
         }
         // 获得构建对象的最小缓冲区大小
-        val minBufferSize = AudioTrack.getMinBufferSize(sampleRate, targetAudioChannel, defaultAudioFormat)
+        minBufferSize = AudioTrack.getMinBufferSize(sampleRate, targetAudioChannel, defaultAudioFormat)
         //组装参数
         val targetAttrs = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
         val audioFormat = AudioFormat.Builder().setEncoding(defaultAudioFormat).setSampleRate(sampleRate)
-            .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO).build()
+            .setChannelMask(targetAudioChannel).build()
         audioTrack = AudioTrack(
-            targetAttrs, audioFormat, minBufferSize, AudioTrack.MODE_STATIC, AudioManager.AUDIO_SESSION_ID_GENERATE
+            targetAttrs, audioFormat, minBufferSize, AudioTrack.MODE_STREAM, AudioManager.AUDIO_SESSION_ID_GENERATE
         )
+    }
+
+    open fun getMinBufferSize(): Int {
+        return minBufferSize
     }
 
     override fun start() {
@@ -75,8 +85,11 @@ class SimpleAudioPlayer(
 
     override fun playAudioBuffer(buffer: ByteArray, offset: Int, length: Int) {
         try {
-            audioTrack?.write(buffer, offset, length)
-            limitLogger.i("playAudioBuffer", "playAudioBuffer bufferSize:${buffer.size}")
+            val writeResult = audioTrack?.write(buffer, offset, length)
+            Logger.d(
+                TAG, "playAudioBuffer " +
+                        "bufferSize:${buffer.size} offset:$offset length:$length writeResult:$writeResult"
+            )
         } catch (e: Exception) {
             limitLogger.e("playAudioBufferError", "playAudioBuffer error:${e.message}")
         }

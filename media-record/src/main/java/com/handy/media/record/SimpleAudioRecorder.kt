@@ -84,7 +84,8 @@ class SimpleAudioRecorder : AudioRecorder {
         audioRecorder = AudioRecord(
             MediaRecorder.getAudioSourceMax(), sampleRate, targetAudioChannel, defaultAudioFormat, bufferSizeInBytes
         )
-        Logger.i(TAG, "init bufferSize:$bufferSizeInBytes sampleRate:$sampleRate channels:$channels")
+        Logger.i(TAG, "init bufferSize:$bufferSizeInBytes sampleRate:$sampleRate " +
+                "channels:$channels targetAudioChannel:$targetAudioChannel")
     }
 
     override fun setAudioRecordListener(audioRecordListener: AudioRecordListener?) {
