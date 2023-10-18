@@ -66,6 +66,7 @@ dependencies {
     implementation project(":media-camera")
     implementation project(":media-decode")
     implementation project(':media-record')
+    implementation project(':media-common')
     implementation project(':logger')
 
 }

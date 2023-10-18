@@ -10,14 +10,20 @@ import androidx.appcompat.app.AppCompatActivity
 import com.handy.logger.Logger
 import com.handy.media.AudioChannels
 import com.handy.media.AudioSampleRate
+import com.handy.media.common.FileUtils
+import com.handy.media.common.IOUtils
 import com.handy.media.player.SimpleAudioPlayer
 import com.handy.media.record.AudioRecordListener
 import com.handy.media.record.SimpleAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 import java.util.Arrays
 import java.util.concurrent.atomic.AtomicBoolean
+
 
 /**
  * @author: handy
@@ -124,16 +130,27 @@ class DebugMediaRecordActivity : AppCompatActivity() {
 
     private val onAudioRecordListener = object : AudioRecordListener {
 
+        @Volatile
+        private var audioPcmFileStream: FileOutputStream? = null
+
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
+
         override fun onRecordStart() {
-            Logger.i(TAG, "onRecordStart")
+            val audioDir = FileUtils.getExternalFileDir("localAudio")
+            val targetAudioFile = File(audioDir, "${dateFormat.format(System.currentTimeMillis())}.pcm")
+                Logger.i(TAG, "onRecordStart ${targetAudioFile.absolutePath}")
+            audioPcmFileStream = FileOutputStream(targetAudioFile)
         }
 
         override fun onRecordBuffer(buffer: ByteArray) {
-
+            audioPcmFileStream?.write(buffer)
+            audioPcmFileStream?.flush()
         }
 
         override fun onRecordStop(errCode: Int) {
             Logger.i(TAG, "onRecordStop errCode:$errCode")
+            IOUtils.closeQuietly(audioPcmFileStream)
+            audioPcmFileStream = null
         }
 
     }
