@@ -3,20 +3,14 @@
 #include <jni.h>
 #include <android/log.h>
 #include "media_audio_recorder.h"
-
-#define LOG_TAG "NativeAudioRecorder"
-
-#define LOGV(format, args...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, format, ##args);
-#define LOGD(format, args...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, format, ##args);
-#define LOGI(format, args...)  __android_log_print(ANDROID_LOG_INFO, LOG_TAG, format, ##args);
-#define LOGW(format, args...)  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, format, ##args);
-#define LOGE(format, args...)  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, format, ##args);
+#include "android_debug.h"
 
 /**
  * 动态注册
  */
 JNINativeMethod methods[] = {
-    {"init", "()V", (void *) nativeInit},
+    {"nativeInit", "(II)V", (void *) nativeInit},
+    {"nativeRelease", "()V", (void *) nativeRelease}
 };
 
 /**
@@ -52,6 +46,11 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
   return JNI_VERSION_1_6;
 }
 
-void nativeInit(JNIEnv *, jobject) {
-  LOGD("nativeInit");
+void nativeInit(JNIEnv *, jobject, jint sampleRate, jint channels) {
+  LOGD("nativeInit sampleRate:%d channels:%d", sampleRate, channels);
+}
+
+
+void nativeRelease(JNIEnv *, jobject) {
+  LOGD("nativeRelease");
 }

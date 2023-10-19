@@ -13,7 +13,7 @@ public class NativeAudioRecorder implements AudioRecorder {
 
     @Override
     public void init(int sampleRate, int channels) {
-
+        nativeInit(sampleRate, channels);
     }
 
     @Override
@@ -33,7 +33,11 @@ public class NativeAudioRecorder implements AudioRecorder {
 
     @Override
     public void release() {
-
+        nativeRelease();
     }
+
+    private native void nativeInit(int sampleRate, int channels);
+
+    private native void nativeRelease();
 
 }

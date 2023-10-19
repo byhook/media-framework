@@ -8,12 +8,9 @@ add_library(
         ${SRC_LIST}
 )
 
-find_library(
-        log-lib
-        log
-)
-
 target_link_libraries(
         media-recorder
-        ${log-lib}
+        android
+        log
+        OpenSLES
 )

@@ -15,7 +15,7 @@ import com.handy.media.common.IOUtils
 import com.handy.media.player.AudioPlayer
 import com.handy.media.player.SimpleFileAudioPlayer
 import com.handy.media.record.AudioRecordListener
-import com.handy.media.record.SimpleAudioRecorder
+import com.handy.media.record.NativeAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
 import com.handy.module.permission.OnPermissionCallback
 import com.handy.module.permission.PermissionUtils
@@ -61,7 +61,7 @@ class DebugMediaRecordActivity : AppCompatActivity() {
      * 录制器
      */
     private val audioRecorder by lazy {
-        SimpleAudioRecorder()
+        NativeAudioRecorder()
     }
 
     /**
