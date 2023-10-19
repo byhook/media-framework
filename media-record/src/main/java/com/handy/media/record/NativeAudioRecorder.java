@@ -5,10 +5,10 @@ package com.handy.media.record;
  * @date: 2023-03-22
  * @description:
  */
-public class NativeOpenAudioRecorder implements AudioRecorder {
+public class NativeAudioRecorder implements AudioRecorder {
 
     static {
-        System.loadLibrary("media-audio");
+        System.loadLibrary("media-recorder");
     }
 
     @Override
