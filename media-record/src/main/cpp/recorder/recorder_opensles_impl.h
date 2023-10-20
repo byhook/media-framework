@@ -20,6 +20,10 @@ class AudioRecorderOpenSLES: public AudioRecorder {
   AudioRecorderOpenSLES();
   ~AudioRecorderOpenSLES();
 
+  virtual void StartRecord();
+
+  virtual void StopRecord();
+
 };
 
 

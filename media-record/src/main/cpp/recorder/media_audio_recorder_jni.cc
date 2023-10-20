@@ -2,6 +2,7 @@
 //
 #include <jni.h>
 #include <android/log.h>
+#include <string>
 #include "media_audio_recorder_jni.h"
 #include "android_debug.h"
 #include "media_audio_recorder.h"
@@ -11,11 +12,15 @@
 //音频录制器
 AudioRecorder *pAudioRecorder = nullptr;
 
+jmethodID onAudioCaptureBuffer = nullptr;
+
 /**
  * 动态注册
  */
 JNINativeMethod methods[] = {
     {"nativeInit", "(II)V", (void *) nativeInit},
+    {"nativeRecordStart", "()V", (void *) nativeRecordStart},
+    {"nativeRecordStop", "()V", (void *) nativeRecordStop},
     {"nativeRelease", "()V", (void *) nativeRelease}
 };
 
@@ -52,11 +57,35 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
   return JNI_VERSION_1_6;
 }
 
-void nativeInit(JNIEnv *, jobject, jint sampleRate, jint channels) {
+void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   LOGD("nativeInit sampleRate:%d channels:%d", sampleRate, channels);
   pAudioRecorder = new AudioRecorderOpenSLES();
+  //查找对应的回调方法
+  jclass targetClazz = env->FindClass(
+      "com/handy/media/record/NativeAudioRecorder"
+  );
+  onAudioCaptureBuffer = env->GetMethodID(targetClazz,
+                                          "onAudioCaptureBuffer",
+                                          "(Ljava/nio/ByteBuffer;IJII)V");
+  env->DeleteLocalRef(targetClazz);
 }
 
+void nativeRecordStart(JNIEnv *env, jobject obj) {
+  LOGD("nativeRecordStart %d", onAudioCaptureBuffer);
+  if (nullptr != onAudioCaptureBuffer) {
+    jobject byteBuffer = nullptr;
+    int length = 1024;
+    uint8_t buffer[1024] = {0};
+    byteBuffer = env->NewDirectByteBuffer(buffer, length);
+    env->CallVoidMethod(obj, onAudioCaptureBuffer, byteBuffer, length,
+                        (jlong) 0, 100, 50);
+    env->DeleteLocalRef(byteBuffer);
+  }
+}
+
+void nativeRecordStop(JNIEnv *, jobject) {
+  LOGD("nativeRecordStop");
+}
 
 void nativeRelease(JNIEnv *, jobject) {
   LOGD("nativeRelease");
@@ -64,4 +93,5 @@ void nativeRelease(JNIEnv *, jobject) {
     delete pAudioRecorder;
     pAudioRecorder = nullptr;
   }
+  onAudioCaptureBuffer = nullptr;
 }

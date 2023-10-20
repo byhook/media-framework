@@ -13,6 +13,10 @@ class AudioRecorder {
 
   virtual ~AudioRecorder();
 
+  virtual void StartRecord() = 0;
+
+  virtual void StopRecord() = 0;
+
 };
 
 

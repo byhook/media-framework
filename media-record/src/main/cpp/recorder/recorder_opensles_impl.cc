@@ -26,6 +26,18 @@ AudioRecorderOpenSLES::AudioRecorderOpenSLES() {
   LOGI("AudioRecorderOpenSLES constructor");
 }
 
+void AudioRecorderOpenSLES::StartRecord() {
+  LOGI("StartRecord");
+  if (nullptr == engineEngine) {
+    LOGE("StartRecord ignore engineEngine is null");
+    return;
+  }
+}
+
+void AudioRecorderOpenSLES::StopRecord() {
+  LOGI("AudioRecorderOpenSLES StopRecord");
+}
+
 AudioRecorderOpenSLES::~AudioRecorderOpenSLES() {
 
   LOGE("~AudioRecorderOpenSLES destructor");
