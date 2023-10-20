@@ -28,7 +28,7 @@ public class NativeAudioRecorder implements AudioRecorder {
 
     @Override
     public void stop() {
-
+        release();
     }
 
     @Override
