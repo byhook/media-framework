@@ -14,10 +14,19 @@ class AudioRecorderOpenSLES: public AudioRecorder {
 
   SLEngineItf engineEngine = nullptr;
   SLObjectItf engineObject = nullptr;
+  SLAndroidConfigurationItf configItf = NULL;
+  //录制对象
+  SLObjectItf recorderObject = NULL;
+  SLAndroidSimpleBufferQueueItf recorderBuffQueueItf = NULL; //Buffer接口
 
  public:
 
-  AudioRecorderOpenSLES();
+  uint8_t *recordBuffer;
+  size_t recordBufferSize;
+  //录制接口
+  SLRecordItf recorderRecord = NULL;
+
+  AudioRecorderOpenSLES(size_t sampleRate, size_t channels);
   ~AudioRecorderOpenSLES();
 
   virtual void StartRecord();

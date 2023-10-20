@@ -59,7 +59,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   LOGD("nativeInit sampleRate:%d channels:%d", sampleRate, channels);
-  pAudioRecorder = new AudioRecorderOpenSLES();
+  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
   //查找对应的回调方法
   jclass targetClazz = env->FindClass(
       "com/handy/media/record/NativeAudioRecorder"
@@ -72,6 +72,7 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
 
 void nativeRecordStart(JNIEnv *env, jobject obj) {
   LOGD("nativeRecordStart %d", onAudioCaptureBuffer);
+  /*
   if (nullptr != onAudioCaptureBuffer) {
     jobject byteBuffer = nullptr;
     int length = 1024;
@@ -81,10 +82,13 @@ void nativeRecordStart(JNIEnv *env, jobject obj) {
                         (jlong) 0, 100, 50);
     env->DeleteLocalRef(byteBuffer);
   }
+   */
+  pAudioRecorder->StartRecord();
 }
 
 void nativeRecordStop(JNIEnv *, jobject) {
   LOGD("nativeRecordStop");
+  pAudioRecorder->StopRecord();
 }
 
 void nativeRelease(JNIEnv *, jobject) {
