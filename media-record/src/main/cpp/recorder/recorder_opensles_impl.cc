@@ -43,7 +43,13 @@ void AudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueueItf,
   AudioRecorderOpenSLES *recorderContext = (AudioRecorderOpenSLES *) context;
   assert(recorderContext != NULL);
   if (recorderContext->recordBuffer != NULL) {
-    LOGD("frame audio data bufferSize:%d", recorderContext->recordBufferSize);
+    //回调开始录制
+    if (nullptr != recorderContext->pObserver) {
+      recorderContext->pObserver->OnRecordBuffer();
+    }
+    LOGD("frame audio data bufferSize:%d",
+         reinterpret_cast<const char *>(recorderContext->recordBufferSize));
+
     SLresult result;
     SLuint32 state;
     result = (*(recorderContext->recorderRecord))->GetRecordState(
@@ -151,7 +157,10 @@ void AudioRecorderOpenSLES::StartRecord() {
   result = (*recorderRecord)->SetRecordState(recorderRecord,
                                              SL_RECORDSTATE_RECORDING);
   assert(SL_RESULT_SUCCESS == result);
-
+  //回调开始录制
+  if (nullptr != pObserver) {
+    pObserver->OnRecordStart();
+  }
   // 在设置完录制状态后一定需要先Enqueue一次，这样的话才会开始采集回调
   (*recorderBuffQueueItf)->Enqueue(recorderBuffQueueItf,
                                    recordBuffer,
@@ -171,6 +180,10 @@ void AudioRecorderOpenSLES::StopRecord() {
     assert(SL_RESULT_SUCCESS == result);
     delete recordBuffer;
     recordBuffer = nullptr;
+    //回调结束录制
+    if (nullptr != pObserver) {
+      pObserver->OnRecordStop();
+    }
   }
   LOGI("AudioRecorderOpenSLES StopRecord");
 }

@@ -19,7 +19,6 @@ AudioRecorder::AudioRecorder(size_t sampleRate, size_t channels) {
   );
 }
 
-
 AudioRecorder::~AudioRecorder() {
   LOGE("~AudioRecorder destructor");
 }

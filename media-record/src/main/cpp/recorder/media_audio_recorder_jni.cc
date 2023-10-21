@@ -2,6 +2,8 @@
 //
 #include <jni.h>
 #include <android/log.h>
+#include <sys/prctl.h>
+#include <sys/syscall.h>
 #include <string>
 #include "media_audio_recorder_jni.h"
 #include "android_debug.h"
@@ -71,7 +73,9 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
 }
 
 void nativeRecordStart(JNIEnv *env, jobject obj) {
-  LOGD("nativeRecordStart %d", onAudioCaptureBuffer);
+  char szThreadName[20] = { 0 };
+  prctl(PR_GET_NAME, szThreadName);
+  LOGD("nativeRecordStart %s", szThreadName);
   /*
   if (nullptr != onAudioCaptureBuffer) {
     jobject byteBuffer = nullptr;

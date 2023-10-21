@@ -6,6 +6,7 @@
 
 
 #include <cstdint>
+#include "audio_recorder_observer.h"
 class AudioRecorder {
 
 
@@ -24,9 +25,17 @@ class AudioRecorder {
 
  public:
 
+  OnAudioRecorderObserver *pObserver = nullptr;
+
+ public:
+
   AudioRecorder(size_t sampleRate, size_t channels);
 
   virtual ~AudioRecorder();
+
+  virtual void SetOnAudioRecorderObserver(OnAudioRecorderObserver *pObserver) {
+    this->pObserver = pObserver;
+  }
 
   virtual void StartRecord() = 0;
 
