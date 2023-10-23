@@ -37,6 +37,7 @@ android {
             version '3.18.1'
         }
     }
+    ndkVersion "${versions.ndkVersion}"
 }
 
 dependencies {

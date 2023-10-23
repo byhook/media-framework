@@ -16,7 +16,8 @@ android {
         consumerProguardFiles "consumer-rules.pro"
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_STL=c++_shared"
+                arguments "-DANDROID_STL=c++_shared",
+                        "-DANDROID_PLATFORM=android-26" //兼容AAudio最低版本要求-测试用的-实际要跟项目的minSdkVersion对齐
                 cppFlags ''
             }
         }
@@ -38,6 +39,8 @@ android {
             version '3.18.1'
         }
     }
+    ndkVersion "${versions.ndkVersion}"
+
     buildFeatures {
         viewBinding true
     }

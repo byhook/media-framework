@@ -13,4 +13,6 @@ target_link_libraries(
         android
         log
         OpenSLES
+        atomic
+        aaudio
 )
