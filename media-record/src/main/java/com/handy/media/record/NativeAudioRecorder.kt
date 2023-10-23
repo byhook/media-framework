@@ -10,17 +10,25 @@ import java.nio.ByteBuffer
  * @description:
  */
 class NativeAudioRecorder : AudioRecorder {
+
+    private var onAudioRecordListener: AudioRecordListener? = null
+
     override fun init(sampleRate: Int, channels: Int) {
         nativeInit(sampleRate, channels)
     }
 
-    override fun setAudioRecordListener(audioRecordListener: AudioRecordListener) {}
+    override fun setAudioRecordListener(audioRecordListener: AudioRecordListener) {
+        this.onAudioRecordListener = audioRecordListener
+    }
+
     override fun start() {
+        onAudioRecordListener?.onRecordStart()
         nativeRecordStart()
     }
 
     override fun stop() {
         nativeRecordStop()
+        onAudioRecordListener?.onRecordStop(0)
     }
 
     override fun release() {
@@ -47,6 +55,7 @@ class NativeAudioRecorder : AudioRecorder {
             TAG, "onAudioCaptureBuffer buffer:$buffer timestamp:$timestamp " +
                     "sampleRate:$sampleRate channels:$channels"
         )
+        onAudioRecordListener?.onRecordBuffer(buffer)
     }
 
     private external fun nativeRecordStart()
