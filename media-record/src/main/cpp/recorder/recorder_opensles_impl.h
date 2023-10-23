@@ -8,6 +8,12 @@
 #include <SLES/OpenSLES_Android.h>
 #include "media_audio_recorder.h"
 
+enum RecordState {
+  STATE_READY = 0,
+  STATE_RECORDING = 1,
+  STATE_STOP = 2
+};
+
 class AudioRecorderOpenSLES: public AudioRecorder {
 
  private:
@@ -20,7 +26,8 @@ class AudioRecorderOpenSLES: public AudioRecorder {
   SLAndroidSimpleBufferQueueItf recorderBuffQueueItf = NULL; //Buffer接口
 
  public:
-
+  //录制状态
+  volatile RecordState recordState = STATE_READY;
   uint8_t *recordBuffer;
   size_t recordBufferSize;
   //录制接口
@@ -32,6 +39,7 @@ class AudioRecorderOpenSLES: public AudioRecorder {
   virtual void StartRecord();
 
   virtual void StopRecord();
+
 
 };
 

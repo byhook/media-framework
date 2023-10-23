@@ -10,11 +10,63 @@
 #include "media_audio_recorder.h"
 #include "recorder_opensles_impl.h"
 
+JavaVM *g_JVM = nullptr;
+jobject g_Obj = nullptr;
 
 //音频录制器
 AudioRecorder *pAudioRecorder = nullptr;
 
 jmethodID onAudioCaptureBuffer = nullptr;
+
+/**
+ * 底层的录制回调
+ */
+class OnRecorderObserver: public OnAudioRecorderObserver {
+
+ protected:
+  JNIEnv *localEnv = nullptr;
+
+  void OnRecordStart() override {
+    JNIEnv *env = nullptr;
+    if (nullptr != g_JVM &&
+        g_JVM->AttachCurrentThread(&env, nullptr) == JNI_OK) {
+      LOGD("OnRecordStart...");
+    } else {
+      LOGE("OnRecordStart... AttachCurrentThread error");
+    }
+  }
+
+  void OnRecordBuffer(uint8_t *buffer, size_t length) {
+    if (nullptr != localEnv && nullptr != g_Obj &&
+        nullptr != onAudioCaptureBuffer) {
+      LOGD("OnRecordBuffer...");
+      if (nullptr != localEnv) {
+        /*
+        int length = 1024;
+        uint8_t buffer[1024] = {0};
+        */
+        jobject byteBuffer = localEnv->NewDirectByteBuffer(
+            buffer, length);
+        localEnv->CallVoidMethod(g_Obj, onAudioCaptureBuffer,
+                                 byteBuffer,
+                                 (jint) length,
+                                 (jlong) 0, 100, 50);
+        localEnv->DeleteLocalRef(byteBuffer);
+      }
+    }
+  }
+
+  virtual void OnRecordStop() {
+    LOGE("OnRecordStop...");
+    if (nullptr != g_JVM) {
+      g_JVM->DetachCurrentThread();
+    }
+    localEnv = nullptr;
+  }
+
+};
+
+OnRecorderObserver *pOnRecorderObserver = nullptr;
 
 /**
  * 动态注册
@@ -56,12 +108,13 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
   if (registerNativeMethod(env) != JNI_OK) {
     return -1;
   }
+  //保存全局JavaVM
+  g_JVM = vm;
   return JNI_VERSION_1_6;
 }
 
 void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   LOGD("nativeInit sampleRate:%d channels:%d", sampleRate, channels);
-  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
   //查找对应的回调方法
   jclass targetClazz = env->FindClass(
       "com/handy/media/record/NativeAudioRecorder"
@@ -70,29 +123,31 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
                                           "onAudioCaptureBuffer",
                                           "(Ljava/nio/ByteBuffer;IJII)V");
   env->DeleteLocalRef(targetClazz);
+  //回调
+  pOnRecorderObserver = new OnRecorderObserver();
+  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
+  pAudioRecorder->SetOnAudioRecorderObserver(pOnRecorderObserver);
 }
 
 void nativeRecordStart(JNIEnv *env, jobject obj) {
-  char szThreadName[20] = { 0 };
+  //保存全局引用
+  g_Obj = env->NewGlobalRef(obj);
+
+  char szThreadName[20] = {0};
   prctl(PR_GET_NAME, szThreadName);
   LOGD("nativeRecordStart %s", szThreadName);
-  /*
-  if (nullptr != onAudioCaptureBuffer) {
-    jobject byteBuffer = nullptr;
-    int length = 1024;
-    uint8_t buffer[1024] = {0};
-    byteBuffer = env->NewDirectByteBuffer(buffer, length);
-    env->CallVoidMethod(obj, onAudioCaptureBuffer, byteBuffer, length,
-                        (jlong) 0, 100, 50);
-    env->DeleteLocalRef(byteBuffer);
-  }
-   */
+
   pAudioRecorder->StartRecord();
 }
 
-void nativeRecordStop(JNIEnv *, jobject) {
+void nativeRecordStop(JNIEnv *env, jobject obj) {
   LOGD("nativeRecordStop");
   pAudioRecorder->StopRecord();
+  pOnRecorderObserver = nullptr;
+  if (nullptr != g_Obj) {
+    env->DeleteGlobalRef(g_Obj);
+    g_Obj = nullptr;
+  }
 }
 
 void nativeRelease(JNIEnv *, jobject) {
@@ -100,6 +155,10 @@ void nativeRelease(JNIEnv *, jobject) {
   if (nullptr != pAudioRecorder) {
     delete pAudioRecorder;
     pAudioRecorder = nullptr;
+  }
+  if (nullptr != pOnRecorderObserver) {
+    delete pOnRecorderObserver;
+    pOnRecorderObserver = nullptr;
   }
   onAudioCaptureBuffer = nullptr;
 }

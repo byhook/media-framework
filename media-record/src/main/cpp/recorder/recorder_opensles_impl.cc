@@ -34,38 +34,63 @@ AudioRecorderOpenSLES::AudioRecorderOpenSLES(size_t sampleRate,
 
 /**
  * 录制音频时的回调
- * @param bufferQueueItf
+ * 这是一个单独的采集线程
+ * @param bufferQueue
  * @param context
  */
-void AudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueueItf,
-                           void *context) {
+void OnAudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueue,
+                             void *context) {
   //注意这个是另外一条采集线程回调
   AudioRecorderOpenSLES *recorderContext = (AudioRecorderOpenSLES *) context;
   assert(recorderContext != NULL);
   if (recorderContext->recordBuffer != NULL) {
     //回调开始录制
-    if (nullptr != recorderContext->pObserver) {
-      recorderContext->pObserver->OnRecordBuffer();
-    }
-    LOGD("frame audio data bufferSize:%d",
-         reinterpret_cast<const char *>(recorderContext->recordBufferSize));
-
-    SLresult result;
     SLuint32 state;
-    result = (*(recorderContext->recorderRecord))->GetRecordState(
+    SLresult recordResult = (*(recorderContext->recorderRecord))->GetRecordState(
         recorderContext->recorderRecord, &state
     );
-    assert(SL_RESULT_SUCCESS == result);
-    (void) result;
-    //LOGD("state=%d", state);
-    if (state == SL_RECORDSTATE_RECORDING) {
-      //取完数据，需要调用Enqueue触发下一次数据回调
-      result = (*bufferQueueItf)->Enqueue(
-          bufferQueueItf, recorderContext->recordBuffer,
+    assert(SL_RESULT_SUCCESS == recordResult);
+    if (state != SL_RECORDSTATE_RECORDING) {
+      return;
+    }
+    if (nullptr == recorderContext->pObserver) {
+      return;
+    }
+    if (recorderContext->recordState == STATE_READY) {
+      recorderContext->recordState = STATE_RECORDING;
+      //回调录制开始了
+      recorderContext->pObserver->OnRecordStart();
+      LOGE("STATE_READY %d", state);
+    }
+    if (recorderContext->recordState == STATE_RECORDING) {
+      //回调录制中
+      recorderContext->pObserver->OnRecordBuffer(
+          recorderContext->recordBuffer,
           recorderContext->recordBufferSize
       );
-      assert(SL_RESULT_SUCCESS == result);
-      (void) result;
+      //取完数据，需要调用Enqueue触发下一次数据回调
+      recordResult = (*bufferQueue)->Enqueue(
+          bufferQueue, recorderContext->recordBuffer,
+          recorderContext->recordBufferSize
+      );
+      assert(SL_RESULT_SUCCESS == recordResult);
+    } else if (recorderContext->recordState == STATE_STOP) {
+      if (recorderContext->recorderRecord != nullptr) {
+        //设置录制器为停止状态 STOPPED
+        SLresult result = (*recorderContext->recorderRecord)->SetRecordState(
+            recorderContext->recorderRecord, SL_RECORDSTATE_STOPPED
+        );
+        assert(SL_RESULT_SUCCESS == result);
+        delete recorderContext->recordBuffer;
+        recorderContext->recordBuffer = nullptr;
+        //回调结束录制
+        recorderContext->pObserver->OnRecordStop();
+        recorderContext->recorderRecord = nullptr;
+      }
+      recorderContext->pObserver = nullptr;
+      LOGE("STATE_STOP %d", state);
+    } else {
+      //
     }
   }
 }
@@ -146,11 +171,11 @@ void AudioRecorderOpenSLES::StartRecord() {
                                   &recorderRecord);
   assert(SL_RESULT_SUCCESS == result);
   //设置数据回调并且开始录制，设置开始录制状态，并通过回调函数获取录制的音频PCM数据：
-  recordBuffer = new uint8_t[bufferSize]; //数据缓存区，
+  recordBuffer = new uint8_t[bufferSize]; //数据缓存区
   recordBufferSize = bufferSize;
   //设置数据回调接口AudioRecorderCallback，最后一个参数是可以传输自定义的上下文引用
   (*recorderBuffQueueItf)->RegisterCallback(recorderBuffQueueItf,
-                                            AudioRecorderCallback,
+                                            OnAudioRecorderCallback,
                                             this);
   assert(SL_RESULT_SUCCESS == result);
   // 开始录制音频，设置录制器为录制状态 RECORDING
@@ -171,21 +196,9 @@ void AudioRecorderOpenSLES::StartRecord() {
 }
 
 void AudioRecorderOpenSLES::StopRecord() {
+  LOGI("StopRecord...");
   // 停止录制
-  if (recorderRecord != nullptr) {
-    //设置录制器为停止状态 STOPPED
-    SLresult result = (*recorderRecord)->SetRecordState(
-        recorderRecord, SL_RECORDSTATE_STOPPED
-    );
-    assert(SL_RESULT_SUCCESS == result);
-    delete recordBuffer;
-    recordBuffer = nullptr;
-    //回调结束录制
-    if (nullptr != pObserver) {
-      pObserver->OnRecordStop();
-    }
-  }
-  LOGI("AudioRecorderOpenSLES StopRecord");
+  recordState = STATE_STOP;
 }
 
 AudioRecorderOpenSLES::~AudioRecorderOpenSLES() {
