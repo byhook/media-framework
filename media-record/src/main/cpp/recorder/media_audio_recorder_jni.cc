@@ -27,9 +27,8 @@ class OnRecorderObserver: public OnAudioRecorderObserver {
   JNIEnv *localEnv = nullptr;
 
   void OnRecordStart() override {
-    JNIEnv *env = nullptr;
     if (nullptr != g_JVM &&
-        g_JVM->AttachCurrentThread(&env, nullptr) == JNI_OK) {
+        g_JVM->AttachCurrentThread(&localEnv, nullptr) == JNI_OK) {
       LOGD("OnRecordStart...");
     } else {
       LOGE("OnRecordStart... AttachCurrentThread error");
@@ -39,18 +38,15 @@ class OnRecorderObserver: public OnAudioRecorderObserver {
   void OnRecordBuffer(uint8_t *buffer, size_t length) {
     if (nullptr != localEnv && nullptr != g_Obj &&
         nullptr != onAudioCaptureBuffer) {
-      LOGD("OnRecordBuffer...");
       if (nullptr != localEnv) {
-        /*
-        int length = 1024;
-        uint8_t buffer[1024] = {0};
-        */
         jobject byteBuffer = localEnv->NewDirectByteBuffer(
             buffer, length);
         localEnv->CallVoidMethod(g_Obj, onAudioCaptureBuffer,
                                  byteBuffer,
                                  (jint) length,
-                                 (jlong) 0, 100, 50);
+                                 (jlong) 0,
+                                 (jint) pAudioRecorder->sampleRate,
+                                 (jint) pAudioRecorder->channels);
         localEnv->DeleteLocalRef(byteBuffer);
       }
     }

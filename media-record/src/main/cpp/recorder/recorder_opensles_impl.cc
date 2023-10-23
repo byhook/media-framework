@@ -31,7 +31,6 @@ AudioRecorderOpenSLES::AudioRecorderOpenSLES(size_t sampleRate,
   LOGI("AudioRecorderOpenSLES constructor");
 }
 
-
 /**
  * 录制音频时的回调
  * 这是一个单独的采集线程
@@ -53,18 +52,18 @@ void OnAudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueue,
     if (state != SL_RECORDSTATE_RECORDING) {
       return;
     }
-    if (nullptr == recorderContext->pObserver) {
+    if (nullptr == recorderContext->pAudioObserver) {
       return;
     }
     if (recorderContext->recordState == STATE_READY) {
       recorderContext->recordState = STATE_RECORDING;
       //回调录制开始了
-      recorderContext->pObserver->OnRecordStart();
+      recorderContext->pAudioObserver->OnRecordStart();
       LOGE("STATE_READY %d", state);
     }
     if (recorderContext->recordState == STATE_RECORDING) {
       //回调录制中
-      recorderContext->pObserver->OnRecordBuffer(
+      recorderContext->pAudioObserver->OnRecordBuffer(
           recorderContext->recordBuffer,
           recorderContext->recordBufferSize
       );
@@ -84,10 +83,10 @@ void OnAudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueue,
         delete recorderContext->recordBuffer;
         recorderContext->recordBuffer = nullptr;
         //回调结束录制
-        recorderContext->pObserver->OnRecordStop();
+        recorderContext->pAudioObserver->OnRecordStop();
         recorderContext->recorderRecord = nullptr;
       }
-      recorderContext->pObserver = nullptr;
+      recorderContext->pAudioObserver = nullptr;
       LOGE("STATE_STOP %d", state);
     } else {
       //
@@ -183,8 +182,8 @@ void AudioRecorderOpenSLES::StartRecord() {
                                              SL_RECORDSTATE_RECORDING);
   assert(SL_RESULT_SUCCESS == result);
   //回调开始录制
-  if (nullptr != pObserver) {
-    pObserver->OnRecordStart();
+  if (nullptr != pAudioObserver) {
+    pAudioObserver->OnRecordStart();
   }
   // 在设置完录制状态后一定需要先Enqueue一次，这样的话才会开始采集回调
   (*recorderBuffQueueItf)->Enqueue(recorderBuffQueueItf,

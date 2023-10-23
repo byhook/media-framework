@@ -9,13 +9,8 @@
 #include "audio_recorder_observer.h"
 class AudioRecorder {
 
-
  protected:
 
-  //采样率
-  size_t sampleRate = 44100;
-  //频道数
-  size_t channels = 2;
   //音频帧周期20ms
   size_t periodTime = 20;
   //每帧音频大小
@@ -25,7 +20,12 @@ class AudioRecorder {
 
  public:
 
-  OnAudioRecorderObserver *pObserver = nullptr;
+  //采样率
+  size_t sampleRate = 48000;
+  //频道数
+  size_t channels = 2;
+
+  OnAudioRecorderObserver *pAudioObserver = nullptr;
 
  public:
 
@@ -34,7 +34,7 @@ class AudioRecorder {
   virtual ~AudioRecorder();
 
   virtual void SetOnAudioRecorderObserver(OnAudioRecorderObserver *pObserver) {
-    this->pObserver = pObserver;
+    this->pAudioObserver = pObserver;
   }
 
   virtual void StartRecord() = 0;
