@@ -28,7 +28,7 @@ AudioRecorderOpenSLES::AudioRecorderOpenSLES(size_t sampleRate,
                                          SL_IID_ENGINE,
                                          &engineEngine);
   assert(SL_RESULT_SUCCESS == result);
-  LOGI("AudioRecorderOpenSLES constructor");
+  LOGI(TAG, "AudioRecorderOpenSLES constructor");
 }
 
 /**
@@ -45,7 +45,8 @@ void OnAudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueue,
   if (recorderContext->recordBuffer != NULL) {
     //回调开始录制
     SLuint32 state;
-    SLresult recordResult = (*(recorderContext->recorderRecord))->GetRecordState(
+    SLresult
+        recordResult = (*(recorderContext->recorderRecord))->GetRecordState(
         recorderContext->recorderRecord, &state
     );
     assert(SL_RESULT_SUCCESS == recordResult);
@@ -95,7 +96,7 @@ void OnAudioRecorderCallback(SLAndroidSimpleBufferQueueItf bufferQueue,
 }
 
 void AudioRecorderOpenSLES::StartRecord() {
-  LOGI("StartRecord");
+  LOGI(TAG, "StartRecord");
   if (nullptr == engineEngine) {
     LOGE("StartRecord ignore engineEngine is null");
     return;
@@ -195,7 +196,7 @@ void AudioRecorderOpenSLES::StartRecord() {
 }
 
 void AudioRecorderOpenSLES::StopRecord() {
-  LOGI("StopRecord...");
+  LOGI(TAG, "StopRecord...");
   // 停止录制
   recordState = STATE_STOP;
 }

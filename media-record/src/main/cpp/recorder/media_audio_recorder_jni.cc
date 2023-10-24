@@ -9,6 +9,7 @@
 #include "android_debug.h"
 #include "media_audio_recorder.h"
 #include "recorder_opensles_impl.h"
+#include "recorder_aaudio_impl.h"
 
 JavaVM *g_JVM = nullptr;
 jobject g_Obj = nullptr;
@@ -43,10 +44,10 @@ class OnRecorderObserver: public OnAudioRecorderObserver {
             buffer, length);
         localEnv->CallVoidMethod(g_Obj, onAudioCaptureBuffer,
                                  byteBuffer,
-                                 (jint) length,
-                                 (jlong) 0,
-                                 (jint) pAudioRecorder->sampleRate,
-                                 (jint) pAudioRecorder->channels);
+                                 static_cast<jint>(length),
+                                 static_cast<jlong>(0),
+                                 static_cast<jint>(pAudioRecorder->sampleRate),
+                                 static_cast<jint>(pAudioRecorder->channels));
         localEnv->DeleteLocalRef(byteBuffer);
       }
     }
@@ -121,7 +122,7 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   env->DeleteLocalRef(targetClazz);
   //回调
   pOnRecorderObserver = new OnRecorderObserver();
-  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
+  pAudioRecorder = new AudioRecorderAAudio(sampleRate, channels);
   pAudioRecorder->SetOnAudioRecorderObserver(pOnRecorderObserver);
 }
 

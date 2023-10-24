@@ -417,7 +417,7 @@ public:
      * This not atomic.
      * This should only be used internally.
      * @param errorCallback
-     * @return previous errorCallback
+     * @return previous onErrorCallback
      */
     AudioStreamErrorCallback *swapErrorCallback(AudioStreamErrorCallback *errorCallback) {
         AudioStreamErrorCallback *previousCallback = mErrorCallback;

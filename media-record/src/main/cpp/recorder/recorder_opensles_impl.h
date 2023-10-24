@@ -8,6 +8,8 @@
 #include <SLES/OpenSLES_Android.h>
 #include "media_audio_recorder.h"
 
+#define TAG "recorder-opensles"
+
 enum RecordState {
   STATE_READY = 0,
   STATE_RECORDING = 1,

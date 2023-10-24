@@ -10,12 +10,13 @@ AudioRecorder::AudioRecorder(size_t sampleRate, size_t channels) {
   this->channels = channels;
   this->frameSize = sampleRate * periodTime / 1000;
   this->bufferSize = frameSize * channels * 2;
-  LOGI("AudioRecorder constructor "
-       "sampleRate:%d, channels:%d, frameSize:%d, bufferSize:%d",
-       sampleRate,
-       channels,
-       frameSize,
-       bufferSize
+  LOGI(TAG,
+      "AudioRecorder constructor sampleRate:%d, "
+      "channels:%d, frameSize:%d, bufferSize:%d",
+      sampleRate,
+      channels,
+      frameSize,
+      bufferSize
   );
 }
 

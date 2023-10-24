@@ -394,7 +394,7 @@ public:
      * <strong>When an error callback occurs, the associated stream must be stopped and closed
      * in a separate thread.</strong>
      *
-     * We pass a shared_ptr so that the errorCallback object cannot be deleted before the stream is deleted.
+     * We pass a shared_ptr so that the onErrorCallback object cannot be deleted before the stream is deleted.
      * If the stream was created using a shared_ptr then the stream cannot be deleted before the
      * error callback has finished running.
      *
@@ -410,7 +410,7 @@ public:
     }
 
     /**
-    * Pass a raw pointer to an error callback. This is not recommended because the errorCallback
+    * Pass a raw pointer to an error callback. This is not recommended because the onErrorCallback
     * object might get deleted by the app while it is being used.
     *
     * @deprecated Call setErrorCallback(std::shared_ptr<AudioStreamErrorCallback>) instead.

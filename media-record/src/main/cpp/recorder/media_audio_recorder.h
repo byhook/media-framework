@@ -7,6 +7,10 @@
 
 #include <cstdint>
 #include "audio_recorder_observer.h"
+
+#define TAG "audio-recorder"
+
+
 class AudioRecorder {
 
  protected:
