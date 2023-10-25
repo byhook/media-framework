@@ -34,8 +34,18 @@ onRecordDataCallback(AAudioStream *stream, void *userData,
     LOGI(TAG, "onRecordDataCallback audioData == nullptr");
     return AAUDIO_CALLBACK_RESULT_CONTINUE;
   }
-  LOGI(TAG, "onRecordDataCallback");
-  return AAUDIO_CALLBACK_RESULT_CONTINUE;
+  AudioRecorderAAudio *pAAudioRecorder =
+      static_cast<AudioRecorderAAudio *>(userData);
+
+  if (nullptr != pAAudioRecorder
+      && nullptr != pAAudioRecorder->pAudioObserver) {
+    pAAudioRecorder->pAudioObserver->OnRecordBuffer(
+        static_cast<uint8_t *>(audioData),
+        numFrames
+    );
+    return AAUDIO_CALLBACK_RESULT_CONTINUE;
+  }
+  return AAUDIO_CALLBACK_RESULT_STOP;
 }
 
 /**
