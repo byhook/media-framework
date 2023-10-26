@@ -43,6 +43,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        prefab true //oboe预构建库
     }
 }
 
@@ -60,6 +61,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutinesCoreVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroidVersion}"
+
+    implementation "com.google.oboe:oboe:${versions.oboe_version}"
 
     implementation project(":logger")
     implementation project(":media-common")

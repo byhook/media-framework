@@ -8,11 +8,14 @@ add_library(
         ${SRC_LIST}
 )
 
+find_package(oboe REQUIRED CONFIG)
+
 target_link_libraries(
         media-recorder
         android
         log
-        OpenSLES
         atomic
+        OpenSLES
         aaudio
+        oboe::oboe
 )
