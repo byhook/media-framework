@@ -26,10 +26,12 @@ bool attachToThread = false;
 void deferInvokeWhenThreadOnExit(uint8_t *exit) {
   thread_local struct OnThreadExit {
 
-    explicit OnThreadExit(uint8_t *wait) {
-      if (nullptr != g_JVM &&
-          g_JVM->AttachCurrentThread(&localEnv, nullptr) == JNI_OK) {
-        LOGD("OnRecordStart...AttachCurrentThread %p", localEnv);
+    explicit OnThreadExit(uint8_t *exit) {
+      if (nullptr != g_JVM && g_JVM->AttachCurrentThread(
+          &localEnv,
+          nullptr
+      ) == JNI_OK) {
+        LOGD("OnRecordStart...AttachCurrentThread");
       } else {
         LOGE("OnRecordStart... AttachCurrentThread error");
       }
@@ -38,10 +40,10 @@ void deferInvokeWhenThreadOnExit(uint8_t *exit) {
     ~OnThreadExit() {
       if (nullptr != g_JVM) {
         g_JVM->DetachCurrentThread();
+        LOGE("OnRecordStop...DetachCurrentThread");
       }
       localEnv = nullptr;
       attachToThread = false;
-      LOGE("OnRecordStop...DetachCurrentThread");
     }
 
   } onExit(exit);
@@ -54,17 +56,15 @@ void onAudioCaptureBuffer(uint8_t *buffer, size_t length) {
   }
   if (nullptr != localEnv && nullptr != g_Obj &&
       nullptr != jAudioCaptureBuffer) {
-    if (nullptr != localEnv) {
-      jobject byteBuffer = localEnv->NewDirectByteBuffer(
-          buffer, length);
-      localEnv->CallVoidMethod(g_Obj, jAudioCaptureBuffer,
-                               byteBuffer,
-                               static_cast<jint>(length),
-                               static_cast<jlong>(0),
-                               static_cast<jint>(pAudioRecorder->sampleRate),
-                               static_cast<jint>(pAudioRecorder->channels));
-      localEnv->DeleteLocalRef(byteBuffer);
-    }
+    jobject byteBuffer = localEnv->NewDirectByteBuffer(
+        buffer, length);
+    localEnv->CallVoidMethod(g_Obj, jAudioCaptureBuffer,
+                             byteBuffer,
+                             static_cast<jint>(length),
+                             static_cast<jlong>(0),
+                             static_cast<jint>(pAudioRecorder->sampleRate),
+                             static_cast<jint>(pAudioRecorder->channels));
+    localEnv->DeleteLocalRef(byteBuffer);
   }
 }
 
@@ -125,7 +125,7 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   env->DeleteLocalRef(targetClazz);
 
   //回调
-  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
+  pAudioRecorder = new AudioRecorderAAudio(sampleRate, channels);
   pAudioRecorder->SetOnAudioRecorderObserver(onAudioCaptureBuffer);
 }
 
