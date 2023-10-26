@@ -8,9 +8,6 @@
 #include <cstdint>
 #include "audio_recorder_observer.h"
 
-#define TAG "audio-recorder"
-
-
 class AudioRecorder {
 
  protected:
@@ -29,7 +26,7 @@ class AudioRecorder {
   //频道数
   size_t channels = 2;
 
-  OnAudioRecorderObserver *pAudioObserver = nullptr;
+  void (*pOnAudioCaptureBuffer)(uint8_t *buffer, size_t bufferSize) = nullptr;
 
  public:
 
@@ -37,8 +34,11 @@ class AudioRecorder {
 
   virtual ~AudioRecorder();
 
-  virtual void SetOnAudioRecorderObserver(OnAudioRecorderObserver *pObserver) {
-    this->pAudioObserver = pObserver;
+  virtual void SetOnAudioRecorderObserver(void (*onAudioCaptureBuffer)(
+      uint8_t *buffer,
+      size_t bufferSize
+  )) {
+    this->pOnAudioCaptureBuffer = onAudioCaptureBuffer;
   }
 
   virtual void StartRecord() = 0;

@@ -17,53 +17,56 @@ jobject g_Obj = nullptr;
 //音频录制器
 AudioRecorder *pAudioRecorder = nullptr;
 
-jmethodID onAudioCaptureBuffer = nullptr;
+jmethodID jAudioCaptureBuffer = nullptr;
 
-/**
- * 底层的录制回调
- */
-class OnRecorderObserver: public OnAudioRecorderObserver {
 
- protected:
-  JNIEnv *localEnv = nullptr;
+JNIEnv *localEnv = nullptr;
+bool attachToThread = false;
 
-  void OnRecordStart() override {
-    if (nullptr != g_JVM &&
-        g_JVM->AttachCurrentThread(&localEnv, nullptr) == JNI_OK) {
-      LOGD("OnRecordStart...");
-    } else {
-      LOGE("OnRecordStart... AttachCurrentThread error");
-    }
-  }
+void deferInvokeWhenThreadOnExit(uint8_t *exit) {
+  thread_local struct OnThreadExit {
 
-  void OnRecordBuffer(uint8_t *buffer, size_t length) {
-    if (nullptr != localEnv && nullptr != g_Obj &&
-        nullptr != onAudioCaptureBuffer) {
-      if (nullptr != localEnv) {
-        jobject byteBuffer = localEnv->NewDirectByteBuffer(
-            buffer, length);
-        localEnv->CallVoidMethod(g_Obj, onAudioCaptureBuffer,
-                                 byteBuffer,
-                                 static_cast<jint>(length),
-                                 static_cast<jlong>(0),
-                                 static_cast<jint>(pAudioRecorder->sampleRate),
-                                 static_cast<jint>(pAudioRecorder->channels));
-        localEnv->DeleteLocalRef(byteBuffer);
+    explicit OnThreadExit(uint8_t *wait) {
+      if (nullptr != g_JVM &&
+          g_JVM->AttachCurrentThread(&localEnv, nullptr) == JNI_OK) {
+        LOGD("OnRecordStart...AttachCurrentThread %p", localEnv);
+      } else {
+        LOGE("OnRecordStart... AttachCurrentThread error");
       }
     }
-  }
 
-  virtual void OnRecordStop() {
-    LOGE("OnRecordStop...");
-    if (nullptr != g_JVM) {
-      g_JVM->DetachCurrentThread();
+    ~OnThreadExit() {
+      if (nullptr != g_JVM) {
+        g_JVM->DetachCurrentThread();
+      }
+      localEnv = nullptr;
+      attachToThread = false;
+      LOGE("OnRecordStop...DetachCurrentThread");
     }
-    localEnv = nullptr;
+
+  } onExit(exit);
+}
+
+void onAudioCaptureBuffer(uint8_t *buffer, size_t length) {
+  if (!attachToThread) {
+    attachToThread = true;
+    deferInvokeWhenThreadOnExit(nullptr);
   }
-
-};
-
-OnRecorderObserver *pOnRecorderObserver = nullptr;
+  if (nullptr != localEnv && nullptr != g_Obj &&
+      nullptr != jAudioCaptureBuffer) {
+    if (nullptr != localEnv) {
+      jobject byteBuffer = localEnv->NewDirectByteBuffer(
+          buffer, length);
+      localEnv->CallVoidMethod(g_Obj, jAudioCaptureBuffer,
+                               byteBuffer,
+                               static_cast<jint>(length),
+                               static_cast<jlong>(0),
+                               static_cast<jint>(pAudioRecorder->sampleRate),
+                               static_cast<jint>(pAudioRecorder->channels));
+      localEnv->DeleteLocalRef(byteBuffer);
+    }
+  }
+}
 
 /**
  * 动态注册
@@ -116,14 +119,14 @@ void nativeInit(JNIEnv *env, jobject obj, jint sampleRate, jint channels) {
   jclass targetClazz = env->FindClass(
       "com/handy/media/record/NativeAudioRecorder"
   );
-  onAudioCaptureBuffer = env->GetMethodID(targetClazz,
-                                          "onAudioCaptureBuffer",
-                                          "(Ljava/nio/ByteBuffer;IJII)V");
+  jAudioCaptureBuffer = env->GetMethodID(targetClazz,
+                                         "onAudioCaptureBuffer",
+                                         "(Ljava/nio/ByteBuffer;IJII)V");
   env->DeleteLocalRef(targetClazz);
+
   //回调
-  pOnRecorderObserver = new OnRecorderObserver();
-  pAudioRecorder = new AudioRecorderAAudio(sampleRate, channels);
-  pAudioRecorder->SetOnAudioRecorderObserver(pOnRecorderObserver);
+  pAudioRecorder = new AudioRecorderOpenSLES(sampleRate, channels);
+  pAudioRecorder->SetOnAudioRecorderObserver(onAudioCaptureBuffer);
 }
 
 void nativeRecordStart(JNIEnv *env, jobject obj) {
@@ -140,7 +143,6 @@ void nativeRecordStart(JNIEnv *env, jobject obj) {
 void nativeRecordStop(JNIEnv *env, jobject obj) {
   LOGD("nativeRecordStop");
   pAudioRecorder->StopRecord();
-  pOnRecorderObserver = nullptr;
   if (nullptr != g_Obj) {
     env->DeleteGlobalRef(g_Obj);
     g_Obj = nullptr;
@@ -153,9 +155,6 @@ void nativeRelease(JNIEnv *, jobject) {
     delete pAudioRecorder;
     pAudioRecorder = nullptr;
   }
-  if (nullptr != pOnRecorderObserver) {
-    delete pOnRecorderObserver;
-    pOnRecorderObserver = nullptr;
-  }
-  onAudioCaptureBuffer = nullptr;
+  pAudioRecorder->SetOnAudioRecorderObserver(nullptr);
+  jAudioCaptureBuffer = nullptr;
 }

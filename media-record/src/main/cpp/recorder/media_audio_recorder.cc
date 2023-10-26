@@ -4,6 +4,7 @@
 #include "media_audio_recorder.h"
 #include "android_debug.h"
 
+#define TAG "audio-recorder"
 
 AudioRecorder::AudioRecorder(size_t sampleRate, size_t channels) {
   this->sampleRate = sampleRate;

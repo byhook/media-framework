@@ -38,8 +38,8 @@ onRecordDataCallback(AAudioStream *stream, void *userData,
       static_cast<AudioRecorderAAudio *>(userData);
 
   if (nullptr != pAAudioRecorder
-      && nullptr != pAAudioRecorder->pAudioObserver) {
-    pAAudioRecorder->pAudioObserver->OnRecordBuffer(
+      && nullptr != pAAudioRecorder->pOnAudioCaptureBuffer) {
+    pAAudioRecorder->pOnAudioCaptureBuffer(
         static_cast<uint8_t *>(audioData),
         numFrames
     );
@@ -58,7 +58,7 @@ onRecordDataCallback(AAudioStream *stream, void *userData,
 void onErrorCallback(AAudioStream *stream,
                      void *data,
                      aaudio_result_t error) {
-  LOGE(TAG, "onErrorCallback %s", AAudio_convertResultToText(error));
+  LOGE("onErrorCallback %s", AAudio_convertResultToText(error));
 }
 
 void
