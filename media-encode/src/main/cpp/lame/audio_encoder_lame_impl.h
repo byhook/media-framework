@@ -4,6 +4,10 @@
 #ifndef MEDIA_FRAMEWORK_AUDIO_ENCODER_LAME_IMPL_H
 #define MEDIA_FRAMEWORK_AUDIO_ENCODER_LAME_IMPL_H
 
+#include <lame/lame.h>
 
+class AudioEncoderLame {
+
+};
 
 #endif //MEDIA_FRAMEWORK_AUDIO_ENCODER_LAME_IMPL_H

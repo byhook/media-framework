@@ -46,6 +46,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+    }
 }
 
 dependencies {
@@ -63,12 +69,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroidVersion}"
 
     implementation "io.github.byhook:utils4android:${versions.utils4android_version}"
+
+    implementation project(':logger')
     implementation project(":media-camera")
+    implementation project(':media-encode')
     implementation project(":media-decode")
     implementation project(':media-record')
     implementation project(':media-common')
-    implementation project(':logger')
-
 }
 repositories {
     mavenCentral()
