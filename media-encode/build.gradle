@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace "com.handy.media.encode"
     compileSdkVersion versions.compileSdk
 
     defaultConfig {
@@ -16,17 +17,9 @@ android {
         consumerProguardFiles "consumer-rules.pro"
         externalNativeBuild {
             cmake {
-                cppFlags "-O2 -std=c++11 -fno-ident -DNDEBUG -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fno-rtti -fno-strict-aliasing -fstack-protector -funwind-tables -fvisibility=hidden -Wall -Wendif-labels -Wextra -Wno-missing-field-initializers -Wno-unused-parameter"
-
-                // 使用下面这种语法向变量传递参数：
-                // arguments "-D变量名=参数".
-                arguments "-DANDROID_ARM_NEON=TRUE",
-                        // 使用下面这种语法向变量传递多个参数（参数之间使用空格隔开）：
-                        // arguments "-D变量名=参数1 参数2"
-                        '-DANDROID_PLATFORM=android-19',
-                        '-DCMAKE_BUILD_TYPE=Release'
-
-                abiFilters "armeabi-v7a", "arm64-v8a"
+                arguments "-DANDROID_STL=c++_shared",
+                        "-DANDROID_PLATFORM=android-21"
+                cppFlags ''
             }
         }
     }
@@ -59,4 +52,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espressoVersion}"
     implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
