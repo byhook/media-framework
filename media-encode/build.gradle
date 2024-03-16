@@ -57,7 +57,7 @@ dependencies {
     implementation "androidx.core:core-ktx:${versions.coreKtxVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //预构建库-prefab
-    implementation "io.github.byhook:lame:${versions.lame_version}"
+    implementation "com.github.byhook:prefab-lame:${versions.lame_version}"
 }
 repositories {
     mavenCentral()

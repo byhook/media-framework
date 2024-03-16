@@ -24,7 +24,7 @@ ext {
             'oboe_version'            : '1.8.0',
 
             'camerax_version'         : '1.1.0',
-            'lame_version'            : '3.100.0'
+            'lame_version'            : '3.100.0.1'
     ]
 
 
