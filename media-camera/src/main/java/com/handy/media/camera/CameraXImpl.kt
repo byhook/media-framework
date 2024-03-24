@@ -1,6 +1,5 @@
 package com.handy.media.camera
 
-import android.app.Activity
 import android.graphics.SurfaceTexture
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
@@ -8,7 +7,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.handy.module.utils.LogUtils
+import com.handy.logger.Logger
 
 /**
  * @author: handy
@@ -39,7 +38,7 @@ class CameraXImpl(private val cameraPreviewView: PreviewView) : CameraSource {
                     cameraPreviewView.context as LifecycleOwner, cameraSelector, preview
                 )
             } catch (exc: Exception) {
-                LogUtils.d(TAG, "Use case binding failed $exc")
+                Logger.d(TAG, "Use case binding failed $exc")
             }
         }, ContextCompat.getMainExecutor(cameraPreviewView.context))
     }

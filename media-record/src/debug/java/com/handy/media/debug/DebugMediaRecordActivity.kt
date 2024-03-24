@@ -17,8 +17,8 @@ import com.handy.media.player.SimpleFileAudioPlayer
 import com.handy.media.record.AudioRecordListener
 import com.handy.media.record.NativeAudioRecorder
 import com.handy.media.record.databinding.DebugActivityMediaRecordBinding
-import com.handy.module.permission.OnPermissionCallback
-import com.handy.module.permission.PermissionUtils
+import io.github.byhook.module.permission.OnPermissionCallback
+import io.github.byhook.module.permission.PermissionUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -1,8 +1,0 @@
-rootProject.name = "media-framework"
-include ':app'
-include ':logger'
-include ':media-camera'
-include ':media-decode'
-include ':media-record'
-include ':media-common'
-include ':media-encode'

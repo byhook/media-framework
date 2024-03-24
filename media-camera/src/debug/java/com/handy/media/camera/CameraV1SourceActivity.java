@@ -7,10 +7,11 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import com.handy.module.permission.OnPermissionCallback;
-import com.handy.module.permission.PermissionUtils;
-import com.handy.module.utils.LogUtils;
 import java.util.Arrays;
+
+import io.github.byhook.module.permission.OnPermissionCallback;
+import io.github.byhook.module.permission.PermissionUtils;
+import io.github.byhook.module.utils.LogUtils;
 
 /**
  * @date: 2020-12-14
@@ -34,7 +35,8 @@ public class CameraV1SourceActivity extends AppCompatActivity {
     }
 
     private void applyPermission(){
-        PermissionUtils.applyPermission(this, new String[]{Manifest.permission.CAMERA}, 200, new OnPermissionCallback() {
+        PermissionUtils.applyPermission(this, new String[]{Manifest.permission.CAMERA}, 200,
+                new OnPermissionCallback() {
             @Override
             public void onRequestPermissionSuccess(String[] permissions, int requestCode) {
                 LogUtils.d(TAG,"onRequestPermissionSuccess " + Arrays.toString(permissions));

@@ -7,10 +7,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
-import com.handy.module.permission.OnPermissionCallback;
-import com.handy.module.permission.PermissionUtils;
-import com.handy.module.utils.LogUtils;
 import java.util.Arrays;
+
+import io.github.byhook.module.permission.OnPermissionCallback;
+import io.github.byhook.module.permission.PermissionUtils;
+import io.github.byhook.module.utils.LogUtils;
 
 /**
  * @date: 2020-12-14
